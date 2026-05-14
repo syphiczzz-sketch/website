@@ -1,118 +1,52 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Learn | Corocat</title>
-    <meta name="description" content="Corocat learning dashboard preview.">
-    <link rel="icon" href="assets/favicon.ico">
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-  </head>
-  <body class="app-body">
-    <aside class="app-sidebar">
-      <a class="brand" href="index.html">
-        <img src="assets/cat.png" alt="" width="34" height="34">
-        <span>Corocat</span>
-      </a>
-      <nav class="app-nav">
-        <a class="active" href="learn.html">Dashboard</a>
-        <a href="course-generation.html">Course generation</a>
-        <a href="whiteboard.html">Whiteboard</a>
-        <a href="enterprise.html">Enterprise Hub</a>
-        <a href="profile.html">Profile</a>
-      </nav>
-      <div class="sidebar-card">
-        <strong>Static preview</strong>
-        <p>Courses here are sample data. The live app saves to Firebase.</p>
-      </div>
-      <a class="button button-light full-width" href="login.html">Log out</a>
-    </aside>
-    <main class="app-main">
-      <header class="app-header">
-        <div>
-          <p class="eyebrow">Learning dashboard</p>
-          <h1>What do you want to master today?</h1>
-        </div>
-        <a class="button button-dark" href="signup.html">Upgrade</a>
-      </header>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Learn — Corocat</title>
+  <meta name="description" content="Start learning with Corocat — your AI-powered learning platform.">
+  <link rel="icon" href="assets/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="info-card-page" style="background:var(--beige);">
 
-      <section class="workspace-grid">
-        <form class="dashboard-card create-card" data-course-form>
-          <h2>Create a course</h2>
-          <label>
-            Topic
-            <input type="text" name="topic" placeholder="System design, Estonian grammar, algebra..." required>
-          </label>
-          <div class="form-grid">
-            <label>
-              Mastery level
-              <select name="masteryLevel">
-                <option>Normal Path</option>
-                <option>Long Mastery</option>
-                <option>Quick Primer</option>
-              </select>
-            </label>
-            <label>
-              Starting level
-              <select name="knowledgeLevel">
-                <option>Beginner</option>
-                <option>Intermediate</option>
-                <option>Advanced</option>
-              </select>
-            </label>
-          </div>
-          <label>
-            Notes
-            <textarea name="notes" rows="4" placeholder="Exam date, goals, weak areas, preferred pace..."></textarea>
-          </label>
-          <div class="segmented">
-            <label><input type="radio" name="mode" value="Solo" checked> Solo</label>
-            <label><input type="radio" name="mode" value="Collaborative"> Collaborative</label>
-          </div>
-          <button class="button button-dark full-width" type="submit">Generate course</button>
-        </form>
+  <header style="position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(0,0,0,0.07);background:rgba(245,240,232,0.90);backdrop-filter:blur(16px);z-index:10;">
+    <a href="index.html" style="display:flex;align-items:center;gap:10px;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:600;color:var(--ink);">
+      <img src="assets/cat.png" alt="" width="32" height="32" style="border-radius:7px;">
+      Corocat
+    </a>
+    <a href="signup.html" class="pill-btn" style="padding:9px 20px;font-size:0.8125rem;">Create free account</a>
+  </header>
 
-        <section class="dashboard-card course-preview">
-          <div class="card-head">
-            <h2>Active course</h2>
-            <span class="status-pill">68% complete</span>
-          </div>
-          <h3>System Design for Backend Interviews</h3>
-          <ol class="lesson-list">
-            <li class="done"><span>01</span> Fundamentals and common vocabulary</li>
-            <li class="done"><span>02</span> Latency, throughput, and availability</li>
-            <li class="active"><span>03</span> Scaling reads and writes</li>
-            <li><span>04</span> Caching and invalidation</li>
-            <li><span>05</span> Mock interview practice</li>
-          </ol>
-          <div class="action-row">
-            <a class="button button-dark" href="course-generation.html">Continue</a>
-            <a class="button button-light" href="whiteboard.html">Open whiteboard</a>
-          </div>
-        </section>
-      </section>
+  <div style="padding-top:5rem;text-align:center;max-width:580px;">
+    <img src="assets/cat.png" alt="Corocat" width="80" height="80" style="border-radius:14px;margin:0 auto 2rem;display:block;">
+    <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:3rem;font-weight:300;margin-bottom:1rem;line-height:1.1;">
+      Your learning dashboard<br><em style="font-style:italic;color:var(--primary);">awaits.</em>
+    </h1>
+    <p style="font-size:0.9375rem;color:var(--ink-light);font-weight:300;line-height:1.7;margin-bottom:2.5rem;">
+      The Corocat app requires an account to generate courses, track progress, and collaborate with others. Sign up for free — no credit card required.
+    </p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+      <a class="pill-btn" href="signup.html">Create free account</a>
+      <a class="outline-pill" href="login.html">Sign in</a>
+    </div>
+    <p style="margin-top:2rem;font-size:0.8125rem;color:var(--ink-light);">
+      Already have the live app deployed?
+      <a href="index.html" class="form-link" style="margin-left:4px;">Back to home</a>
+    </p>
+  </div>
 
-      <section class="dashboard-card">
-        <div class="card-head">
-          <h2>Course history</h2>
-          <a href="course-generation.html">New course</a>
-        </div>
-        <div class="course-grid">
-          <article>
-            <strong>Data Storytelling with SQL</strong>
-            <span>12 steps - Solo - 100%</span>
-          </article>
-          <article>
-            <strong>Collaborative Product Discovery</strong>
-            <span>Whiteboard room - 4 members</span>
-          </article>
-          <article>
-            <strong>Exam Prep: Biology</strong>
-            <span>8 steps - Quiz average 86</span>
-          </article>
-        </div>
-      </section>
-    </main>
-  </body>
+  <!-- Preview of what's inside -->
+  <div style="margin-top:4rem;width:100%;max-width:960px;">
+    <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);box-shadow:0 20px 60px rgba(0,0,0,0.10);">
+      <img src="assets/Landing-screenshot.png" alt="Corocat app preview" style="width:100%;height:auto;display:block;">
+    </div>
+  </div>
+
+</div>
+</body>
 </html>
