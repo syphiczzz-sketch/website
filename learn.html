@@ -8,45 +8,44 @@
   <link rel="icon" href="assets/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .learn-header {
+      position: fixed; top:0; left:0; right:0; z-index:20;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1rem 2rem;
+      border-bottom:1px solid rgba(0,0,0,.07);
+      background:rgba(245,240,232,.90);
+      backdrop-filter:blur(16px);
+    }
+  </style>
 </head>
 <body>
-<div class="info-card-page" style="background:var(--beige);">
 
-  <header style="position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(0,0,0,0.07);background:rgba(245,240,232,0.90);backdrop-filter:blur(16px);z-index:10;">
-    <a href="index.html" style="display:flex;align-items:center;gap:10px;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:600;color:var(--ink);">
+  <header class="learn-header">
+    <a href="index.html" class="brand">
       <img src="assets/cat.png" alt="" width="32" height="32" style="border-radius:7px;">
-      Corocat
+      <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:600;">Corocat</span>
     </a>
-    <a href="signup.html" class="pill-btn" style="padding:9px 20px;font-size:0.8125rem;">Create free account</a>
+    <a href="signup.html" class="pill-btn" style="padding:9px 20px;font-size:.8125rem;">Create free account</a>
   </header>
 
-  <div style="padding-top:5rem;text-align:center;max-width:580px;">
+  <div class="learn-page" style="padding-top:6rem;">
     <img src="assets/cat.png" alt="Corocat" width="80" height="80" style="border-radius:14px;margin:0 auto 2rem;display:block;">
-    <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:3rem;font-weight:300;margin-bottom:1rem;line-height:1.1;">
-      Your learning dashboard<br><em style="font-style:italic;color:var(--primary);">awaits.</em>
-    </h1>
-    <p style="font-size:0.9375rem;color:var(--ink-light);font-weight:300;line-height:1.7;margin-bottom:2.5rem;">
-      The Corocat app requires an account to generate courses, track progress, and collaborate with others. Sign up for free — no credit card required.
-    </p>
-    <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+    <h1>Your learning dashboard<br><em>awaits.</em></h1>
+    <p>The Corocat app requires a live deployment with Firebase to generate courses, track progress, and collaborate. Sign up for free — no credit card required.</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:2rem;">
       <a class="pill-btn" href="signup.html">Create free account</a>
       <a class="outline-pill" href="login.html">Sign in</a>
     </div>
-    <p style="margin-top:2rem;font-size:0.8125rem;color:var(--ink-light);">
-      Already have the live app deployed?
-      <a href="index.html" class="form-link" style="margin-left:4px;">Back to home</a>
-    </p>
-  </div>
 
-  <!-- Preview of what's inside -->
-  <div style="margin-top:4rem;width:100%;max-width:960px;">
-    <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);box-shadow:0 20px 60px rgba(0,0,0,0.10);">
-      <img src="assets/Landing-screenshot.png" alt="Corocat app preview" style="width:100%;height:auto;display:block;">
+    <div style="width:100%;max-width:960px;margin-top:2rem;">
+      <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,.08);box-shadow:0 20px 60px rgba(0,0,0,.10);">
+        <img src="assets/Landing-screenshot.png" alt="Corocat app preview" style="width:100%;height:auto;display:block;">
+      </div>
     </div>
   </div>
 
-</div>
 </body>
 </html>

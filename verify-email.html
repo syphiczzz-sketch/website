@@ -4,38 +4,43 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Verify Email — Corocat</title>
-  <meta name="description" content="Verify your Corocat email address.">
   <link rel="icon" href="assets/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="info-card-page">
+
   <div style="margin-bottom:2rem;">
-    <a href="index.html" style="display:flex;align-items:center;gap:10px;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.3rem;font-weight:600;color:var(--ink);">
-      <img src="assets/cat.png" alt="Corocat" width="36" height="36" style="border-radius:8px;">
-      Corocat
+    <a href="index.html" class="brand">
+      <img src="assets/cat.png" alt="" width="36" height="36" style="border-radius:8px;">
+      <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.3rem;font-weight:600;">Corocat</span>
     </a>
   </div>
 
   <div class="info-card">
     <div class="info-icon">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><path d="M7 16l3 3 7-7"/></svg>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="20" height="16" x="2" y="4" rx="2"/>
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        <path d="M7 16l3 3 7-7"/>
+      </svg>
     </div>
     <h1>Verify Your Email</h1>
     <p>We've sent a verification link to your email address. Please check your inbox and click the link to finish setting up your account.</p>
-    <p style="font-size:0.8125rem;margin-bottom:2rem;">Once you've verified, refresh this page or click the button below to continue.</p>
-    <a class="btn-primary" href="learn.html" style="margin-bottom:1rem;">Refresh and Continue</a>
-    <div style="margin-top:1rem;font-size:0.875rem;color:var(--ink-light);">
-      Didn't receive an email?
-      <button onclick="alert('This is a static preview. Please use the live app.')" style="background:none;border:none;cursor:pointer;font-size:0.875rem;text-decoration:underline;text-underline-offset:3px;color:var(--ink);font-family:inherit;padding:0;margin-left:4px;">Resend link</button>
+    <p style="font-size:.8125rem;margin-bottom:1.5rem;">Once you've verified, refresh this page to continue.</p>
+    <a class="btn-form-primary" href="learn.html" style="margin-bottom:1rem;">Refresh and Continue</a>
+    <div style="margin-top:1rem;font-size:.875rem;color:var(--muted-fg);">
+      Didn't receive an email?&nbsp;
+      <button onclick="alert('This is a static preview. Please use the live app.')" style="background:none;border:none;cursor:pointer;font-size:.875rem;text-decoration:underline;text-underline-offset:3px;color:var(--ink);font-family:inherit;padding:0;">Resend link</button>
     </div>
-    <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(0,0,0,0.08);">
-      <a href="login.html" style="font-size:0.875rem;color:var(--ink-light);">← Back to login</a>
+    <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(0,0,0,.08);">
+      <a href="login.html" style="font-size:.875rem;color:var(--muted-fg);">← Back to login</a>
     </div>
   </div>
+
 </div>
 </body>
 </html>
