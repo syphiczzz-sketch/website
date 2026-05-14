@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log In | Corocat</title>
+    <meta name="description" content="Log in to Corocat.">
+    <link rel="icon" href="assets/favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body class="auth-page">
+    <main class="auth-shell">
+      <section class="auth-panel">
+        <a class="back-link" href="index.html">Back to homepage</a>
+        <a class="brand auth-brand" href="index.html">
+          <img src="assets/cat.png" alt="" width="36" height="36">
+          <span>Corocat</span>
+        </a>
+        <h1>Welcome back</h1>
+        <p>Enter your email and password to sign in to your account.</p>
+        <button class="button button-light full-width" type="button" data-toast="Google sign-in needs the full Next.js app.">Sign in with Google</button>
+        <div class="divider"><span>Or continue with</span></div>
+        <form class="form-stack" data-static-form data-success="Demo login complete. Opening the app preview.">
+          <label>
+            Email
+            <input type="email" name="email" placeholder="name@example.com" required>
+          </label>
+          <label>
+            <span class="label-row">
+              Password
+              <a href="forgot-password.html">Forgot your password?</a>
+            </span>
+            <input type="password" name="password" required>
+          </label>
+          <button class="button button-dark full-width" type="submit" data-redirect="learn.html">Sign In</button>
+        </form>
+        <p class="auth-note">Do not have an account? <a href="signup.html">Sign up</a></p>
+      </section>
+      <aside class="auth-aside">
+        <img src="assets/Landing-screenshot.png" alt="Corocat dashboard preview">
+        <h2>Keep every learning path organized.</h2>
+        <p>This static page is ready for deploy. Connect the form to Firebase when using the full app.</p>
+      </aside>
+    </main>
+  </body>
+</html>

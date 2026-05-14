@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Learn | Corocat</title>
+    <meta name="description" content="Corocat learning dashboard preview.">
+    <link rel="icon" href="assets/favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body class="app-body">
+    <aside class="app-sidebar">
+      <a class="brand" href="index.html">
+        <img src="assets/cat.png" alt="" width="34" height="34">
+        <span>Corocat</span>
+      </a>
+      <nav class="app-nav">
+        <a class="active" href="learn.html">Dashboard</a>
+        <a href="course-generation.html">Course generation</a>
+        <a href="whiteboard.html">Whiteboard</a>
+        <a href="enterprise.html">Enterprise Hub</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+      <div class="sidebar-card">
+        <strong>Static preview</strong>
+        <p>Courses here are sample data. The live app saves to Firebase.</p>
+      </div>
+      <a class="button button-light full-width" href="login.html">Log out</a>
+    </aside>
+    <main class="app-main">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Learning dashboard</p>
+          <h1>What do you want to master today?</h1>
+        </div>
+        <a class="button button-dark" href="signup.html">Upgrade</a>
+      </header>
+
+      <section class="workspace-grid">
+        <form class="dashboard-card create-card" data-course-form>
+          <h2>Create a course</h2>
+          <label>
+            Topic
+            <input type="text" name="topic" placeholder="System design, Estonian grammar, algebra..." required>
+          </label>
+          <div class="form-grid">
+            <label>
+              Mastery level
+              <select name="masteryLevel">
+                <option>Normal Path</option>
+                <option>Long Mastery</option>
+                <option>Quick Primer</option>
+              </select>
+            </label>
+            <label>
+              Starting level
+              <select name="knowledgeLevel">
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            Notes
+            <textarea name="notes" rows="4" placeholder="Exam date, goals, weak areas, preferred pace..."></textarea>
+          </label>
+          <div class="segmented">
+            <label><input type="radio" name="mode" value="Solo" checked> Solo</label>
+            <label><input type="radio" name="mode" value="Collaborative"> Collaborative</label>
+          </div>
+          <button class="button button-dark full-width" type="submit">Generate course</button>
+        </form>
+
+        <section class="dashboard-card course-preview">
+          <div class="card-head">
+            <h2>Active course</h2>
+            <span class="status-pill">68% complete</span>
+          </div>
+          <h3>System Design for Backend Interviews</h3>
+          <ol class="lesson-list">
+            <li class="done"><span>01</span> Fundamentals and common vocabulary</li>
+            <li class="done"><span>02</span> Latency, throughput, and availability</li>
+            <li class="active"><span>03</span> Scaling reads and writes</li>
+            <li><span>04</span> Caching and invalidation</li>
+            <li><span>05</span> Mock interview practice</li>
+          </ol>
+          <div class="action-row">
+            <a class="button button-dark" href="course-generation.html">Continue</a>
+            <a class="button button-light" href="whiteboard.html">Open whiteboard</a>
+          </div>
+        </section>
+      </section>
+
+      <section class="dashboard-card">
+        <div class="card-head">
+          <h2>Course history</h2>
+          <a href="course-generation.html">New course</a>
+        </div>
+        <div class="course-grid">
+          <article>
+            <strong>Data Storytelling with SQL</strong>
+            <span>12 steps - Solo - 100%</span>
+          </article>
+          <article>
+            <strong>Collaborative Product Discovery</strong>
+            <span>Whiteboard room - 4 members</span>
+          </article>
+          <article>
+            <strong>Exam Prep: Biology</strong>
+            <span>8 steps - Quiz average 86</span>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

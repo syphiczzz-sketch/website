@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enterprise Hub | Corocat</title>
+    <link rel="icon" href="assets/favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body class="app-body">
+    <aside class="app-sidebar">
+      <a class="brand" href="index.html">
+        <img src="assets/cat.png" alt="" width="34" height="34">
+        <span>Corocat</span>
+      </a>
+      <nav class="app-nav">
+        <a href="learn.html">Dashboard</a>
+        <a href="whiteboard.html">Whiteboard</a>
+        <a class="active" href="enterprise.html">Enterprise Hub</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+    </aside>
+    <main class="app-main">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Enterprise</p>
+          <h1>Coaching, reporting, and priority support.</h1>
+        </div>
+        <a class="button button-dark" href="signup.html">Activate plan</a>
+      </header>
+      <section class="metric-grid">
+        <article><span>Courses</span><strong>24</strong></article>
+        <article><span>Completed</span><strong>9</strong></article>
+        <article><span>Avg completion</span><strong>74%</strong></article>
+        <article><span>Quiz average</span><strong>88</strong></article>
+        <article><span>Rooms</span><strong>6</strong></article>
+      </section>
+      <section class="enterprise-grid">
+        <article class="dashboard-card coach-card">
+          <h2>Coach Inbox</h2>
+          <div class="message coach">I reviewed your last attempt. Next: concise tradeoff framing in 90 seconds.</div>
+          <div class="message user">Can we run one more distributed cache scenario?</div>
+          <form class="message-form" data-static-form data-success="Preview message added locally.">
+            <input type="text" placeholder="Write a message to your coach..." required>
+            <button class="button button-dark" type="submit">Send</button>
+          </form>
+        </article>
+        <article class="dashboard-card">
+          <h2>Deep prep session</h2>
+          <form class="form-stack" data-static-form data-success="Session request simulated.">
+            <label>
+              Type
+              <select>
+                <option>Interview preparation</option>
+                <option>Exam preparation</option>
+              </select>
+            </label>
+            <label>
+              Goal
+              <input type="text" placeholder="Improve API design confidence" required>
+            </label>
+            <label>
+              Focus areas
+              <textarea rows="4" placeholder="Tradeoffs, latency, scaling"></textarea>
+            </label>
+            <button class="button button-dark full-width" type="submit">Submit request</button>
+          </form>
+        </article>
+        <article class="dashboard-card">
+          <h2>Weekly strategy</h2>
+          <textarea rows="8">Focus on two priorities this week: mock interview systems and measurable retention drills.</textarea>
+          <button class="button button-light full-width" type="button" data-toast="Strategy save is simulated in this static build.">Save strategy</button>
+        </article>
+        <article class="dashboard-card">
+          <h2>Progress report</h2>
+          <div class="report-chart">
+            <span style="height: 48%"></span>
+            <span style="height: 64%"></span>
+            <span style="height: 72%"></span>
+            <span style="height: 58%"></span>
+            <span style="height: 86%"></span>
+          </div>
+          <p>Completion and quiz trends are sample data in the static package.</p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

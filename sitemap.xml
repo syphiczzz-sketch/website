@@ -4,4 +4,40 @@
     <loc>https://example.com/</loc>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://example.com/login.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://example.com/signup.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://example.com/learn.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://example.com/course-generation.html</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/whiteboard.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://example.com/enterprise.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://example.com/profile.html</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://example.com/terms.html</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://example.com/privacy.html</loc>
+    <priority>0.3</priority>
+  </url>
 </urlset>

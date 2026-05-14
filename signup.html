@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign Up | Corocat</title>
+    <meta name="description" content="Create a Corocat account.">
+    <link rel="icon" href="assets/favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body class="auth-page">
+    <main class="auth-shell">
+      <section class="auth-panel">
+        <a class="back-link" href="index.html">Back to homepage</a>
+        <a class="brand auth-brand" href="index.html">
+          <img src="assets/cat.png" alt="" width="36" height="36">
+          <span>Corocat</span>
+        </a>
+        <h1>Create an account</h1>
+        <p>Start with a free account and generate your first learning path.</p>
+        <button class="button button-light full-width" type="button" data-toast="Google sign-up needs the full Next.js app.">Sign up with Google</button>
+        <div class="divider"><span>Or continue with</span></div>
+        <form class="form-stack" data-static-form data-success="Demo account created. Opening the app preview.">
+          <label>
+            Email
+            <input type="email" name="email" placeholder="name@example.com" required>
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" placeholder="Min 8 characters" minlength="8" required>
+          </label>
+          <label>
+            Confirm password
+            <input type="password" name="confirmPassword" minlength="8" required>
+          </label>
+          <button class="button button-dark full-width" type="submit" data-redirect="learn.html">Sign Up</button>
+        </form>
+        <p class="auth-note">Already have an account? <a href="login.html">Sign in</a></p>
+      </section>
+      <aside class="auth-aside">
+        <video autoplay muted loop playsinline poster="assets/Landing-screenshot.png">
+          <source src="assets/corocat1.mp4" type="video/mp4">
+        </video>
+        <h2>Generate courses for any topic.</h2>
+        <p>The production signup flow should be connected to Firebase in the Next.js version.</p>
+      </aside>
+    </main>
+  </body>
+</html>
