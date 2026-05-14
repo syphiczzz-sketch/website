@@ -118,10 +118,10 @@ body {
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-family: 'Cormorant Garamond',Georgia,serif;
-  font-size: 1.35rem;
-  font-weight: 600;
+  gap: 8px;
+  font-family: 'Poppins','Helvetica Neue',sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: var(--ink);
 }
 .brand img { border-radius: 7px; }
@@ -614,7 +614,7 @@ body {
   padding:2rem 0;
 }
 .auth-left-middle h1 {
-  font-family:'Cormorant Garamond',Georgia,serif;
+  font-family:'Poppins','Helvetica Neue',sans-serif;
   font-size:2.25rem; font-weight:700; line-height:1.2;
   color:var(--fg); margin-bottom:.5rem;
 }
@@ -641,10 +641,10 @@ body {
 }
 .auth-back:hover { color:var(--ink); }
 
-.auth-logo { display:flex; align-items:center; gap:10px; margin-bottom:1.5rem; }
+.auth-logo { display:flex; align-items:center; gap:8px; margin-bottom:1.5rem; }
 .auth-logo span {
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:1.3rem; font-weight:600; color:var(--ink);
+  font-family:'Poppins','Helvetica Neue',sans-serif;
+  font-size:1.25rem; font-weight:700; color:var(--ink);
 }
 
 .auth-title { font-size:1.5rem; font-weight:600; letter-spacing:-.01em; text-align:center; margin-bottom:.5rem; }
