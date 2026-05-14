@@ -1,43 +1,56 @@
-// ── Scroll reveal ─────────────────────────────────────────────────────────────
-const revealEls = document.querySelectorAll('.reveal');
-const revealObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      revealObs.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.08 });
-revealEls.forEach(el => revealObs.observe(el));
+// ── Reveal on scroll ──────────────────────────────────────────────────────────
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  els.forEach(function (el) { obs.observe(el); });
+}());
 
 // ── Carousel ──────────────────────────────────────────────────────────────────
-const track    = document.querySelector('[data-carousel-track]');
-const cards    = track ? Array.from(track.children) : [];
-const prevBtn  = document.querySelector('[data-carousel-prev]');
-const nextBtn  = document.querySelector('[data-carousel-next]');
+(function () {
+  var track   = document.querySelector('[data-carousel-track]');
+  var prevBtn = document.querySelector('[data-carousel-prev]');
+  var nextBtn = document.querySelector('[data-carousel-next]');
+  if (!track) return;
 
-let carouselIdx = 0;
-const perView   = () => window.innerWidth <= 640 ? 1 : 2;
+  var cards = track.children;
+  var idx   = 0;
 
-function slideCarousel(dir) {
-  const total = cards.length;
-  const pv    = perView();
-  carouselIdx = (carouselIdx + dir + total) % total;
-  const pct   = (100 / pv) * carouselIdx;
-  track.style.transform = `translateX(-${pct}%)`;
-}
+  function perView() { return window.innerWidth <= 640 ? 1 : 2; }
 
-if (prevBtn) prevBtn.addEventListener('click', () => slideCarousel(-1));
-if (nextBtn) nextBtn.addEventListener('click', () => slideCarousel( 1));
+  function slide(dir) {
+    var total = cards.length;
+    var pv    = perView();
+    idx = (idx + dir + total) % total;
+    // Clamp so we never scroll past the last card
+    if (idx > total - pv) idx = 0;
+    var pct = (100 / pv) * idx;
+    track.style.transform = 'translateX(-' + pct + '%)';
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', function () { slide(-1); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { slide(1); });
+}());
 
 // ── Footer year ───────────────────────────────────────────────────────────────
-const yearEl = document.querySelector('[data-year]');
-if (yearEl) yearEl.textContent = new Date().getFullYear();
+document.querySelectorAll('[data-year]').forEach(function (el) {
+  el.textContent = new Date().getFullYear();
+});
 
 // ── Sticky header scroll shadow ───────────────────────────────────────────────
-const header = document.querySelector('[data-header]');
-window.addEventListener('scroll', () => {
-  if (header) header.style.boxShadow = window.scrollY > 10
-    ? '0 4px 24px rgba(0,0,0,0.07)'
-    : 'none';
-}, { passive: true });
+(function () {
+  var header = document.querySelector('[data-header]');
+  if (!header) return;
+  window.addEventListener('scroll', function () {
+    header.style.boxShadow = window.scrollY > 10
+      ? '0 4px 24px rgba(0,0,0,0.07)'
+      : 'none';
+  }, { passive: true });
+}());

@@ -413,7 +413,7 @@ body {
 .bento-display em { font-style:italic; color:var(--primary); }
 
 /* ── Testimonials ────────────────────────────────────────────────────── */
-.carousel-outer { overflow:hidden; }
+.carousel-wrap { overflow:hidden; }
 .carousel-track {
   display:flex; gap:1px;
   transition:transform .5s cubic-bezier(.22,1,.36,1);
@@ -482,10 +482,10 @@ body {
   border: 1px solid var(--glass-border);
   position: relative;
 }
-.price-premium    { background:rgba(245,240,232,.64); }
-.price-premium:hover { background:rgba(237,230,214,.78); }
-.price-enterprise { background:rgba(76,65,52,.84); color:#fff; }
-.price-enterprise:hover { background:rgba(92,79,64,.9); }
+.price-tile-premium    { background:rgba(245,240,232,.64); }
+.price-tile-premium:hover { background:rgba(237,230,214,.78); }
+.price-tile-enterprise { background:rgba(76,65,52,.84); color:#fff; }
+.price-tile-enterprise:hover { background:rgba(92,79,64,.9); }
 
 .price-amount {
   font-family:'Cormorant Garamond',Georgia,serif;
@@ -497,8 +497,8 @@ body {
   font-weight:500; color:var(--muted-fg); margin-bottom:2rem;
   margin-top:8px;
 }
-.price-enterprise .price-period { color:rgba(255,255,255,.70); }
-.price-premium .price-period    { color:#8a7d6e; }
+.price-tile-enterprise .price-period { color:rgba(255,255,255,.70); }
+.price-tile-premium .price-period    { color:#8a7d6e; }
 
 .price-features { margin-bottom:2rem; display:flex; flex-direction:column; gap:12px; }
 .price-feature  {
@@ -506,8 +506,8 @@ body {
   font-size:.875rem; font-weight:300;
   color:rgba(26,24,20,.55);
 }
-.price-enterprise .price-feature { color:rgba(255,255,255,.85); }
-.price-premium .price-feature    { color:rgba(74,69,64,1); }
+.price-tile-enterprise .price-feature { color:rgba(255,255,255,.85); }
+.price-tile-premium .price-feature    { color:rgba(74,69,64,1); }
 
 .plan-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
 
@@ -524,11 +524,11 @@ body {
   border:1px solid rgba(255,255,255,.20);
 }
 
-.check-icon          { color:#16a34a; flex-shrink:0; margin-top:2px; }
-.check-icon-primary  { color:var(--primary); flex-shrink:0; margin-top:2px; }
-.check-icon-emerald  { color:#6ee7b7; flex-shrink:0; margin-top:2px; }
+.check-icon           { color:#16a34a;       flex-shrink:0; margin-top:2px; }
+.check-icon-premium   { color:var(--primary); flex-shrink:0; margin-top:2px; }
+.check-icon-enterprise{ color:#6ee7b7;       flex-shrink:0; margin-top:2px; }
 
-.price-enterprise .pill-btn { background:#fff; color:var(--ink); width:100%; justify-content:center; }
+.price-tile-enterprise .pill-btn { background:#fff; color:var(--ink); width:100%; justify-content:center; }
 .price-preview-link {
   display:flex; align-items:center; justify-content:center;
   width:100%; margin-top:12px; padding:8px 16px;
@@ -553,6 +553,7 @@ body {
   font-weight:300; line-height:1.05; margin-bottom:1.25rem; color:var(--ink);
 }
 .cta-title em { font-style:italic; color:var(--primary); }
+.cta-cat { display:block; margin:0 auto 1.5rem; border-radius:12px; }
 .cta-sub { font-size:.875rem; font-weight:300; color:var(--ink-light); margin-bottom:2.5rem; }
 
 /* ── Footer ──────────────────────────────────────────────────────────── */
@@ -576,9 +577,9 @@ body {
 .discord-btn:hover { background:#4752C4; }
 
 .footer-nav-title { font-size:.625rem; letter-spacing:.15em; text-transform:uppercase; font-weight:500; color:var(--muted-fg); margin-bottom:1.25rem; }
-.footer-nav-list  { display:flex; flex-direction:column; gap:12px; }
-.footer-nav-list a { font-size:.875rem; font-weight:300; color:var(--muted-fg); transition:color .2s; }
-.footer-nav-list a:hover { color:var(--ink); }
+.footer-nav ul    { display:flex; flex-direction:column; gap:12px; }
+.footer-nav a     { font-size:.875rem; font-weight:300; color:var(--muted-fg); transition:color .2s; }
+.footer-nav a:hover { color:var(--ink); }
 
 .footer-copy {
   border-top:1px solid rgba(0,0,0,.08); padding-top:1.5rem;
