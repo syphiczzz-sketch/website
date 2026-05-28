@@ -1,0 +1,21 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# System
+.DS_Store
+*.log
+logs/
+*.swp
+.vscode/settings.json
+
+# IDE
+.idea/
+*.sublime-project
+*.sublime-workspace

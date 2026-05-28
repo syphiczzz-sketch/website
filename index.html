@@ -1,108 +1,93 @@
-<!doctype html>
+﻿<!DOCTYPE html>
 <html lang="et">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Axion Updates Admin</title>
-        <link rel="stylesheet" href="./styles.css">
-        <script src="./app.js" defer></script>
-    </head>
-    <body>
-        <main>
-            <section id="loginView" class="login">
-                <form id="loginForm" class="login-panel">
-                    <img src="logo.png" alt="Axion Freeroam">
-                    <h1>Admin paneel</h1>
-                    <label>
-                        Kasutajanimi
-                        <input id="username" name="username" autocomplete="username" required>
-                    </label>
-                    <label>
-                        Parool
-                        <input id="password" name="password" type="password" autocomplete="current-password" required>
-                    </label>
-                    <p id="loginError" class="error" aria-live="polite"></p>
-                    <button type="submit">Logi sisse</button>
-                </form>
-            </section>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axion Freeroam - Kogukonna Veeb</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo"><i class="fas fa-compass"></i> Axion Freeroam</div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Kodu</a></li>
+                <li><a href="team.html" class="nav-link">Meeskond</a></li>
+                <li><a href="join.html" class="nav-link">Liitu meeskonnaga</a></li>
+                <li><a href="rules.html" class="nav-link">Reeglid</a></li>
+                <li><a href="store.html" class="nav-link">Pood</a></li>
+            </ul>
+        </div>
+    </nav>
 
-            <section id="adminView" class="admin hidden">
-                <aside class="sidebar">
-                    <div class="brand">
-                        <img src="logo.png" alt="Axion Freeroam">
-                        <div>
-                            <p>Axion Freeroam</p>
-                            <h1>Uuendused</h1>
-                        </div>
-                    </div>
-                    <button id="newUpdate" type="button">Uus uuendus</button>
-                    <button id="logout" type="button" class="ghost">Logi välja</button>
-                    <div id="updateList" class="update-list"></div>
-                </aside>
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <p class="hero-kicker"><i class="fas fa-sparkles"></i> Uuendatud Veebikogemus</p>
+            <h1>AXION FREEROAM</h1>
+            <p>Selge, kiire ja stiilne kogukonnaleht, kus info, ostud ja sisulehed on loogiliselt paigutatud ning lihtsasti kasutatavad.</p>
+            <div class="hero-buttons">
+                <a class="btn btn-primary" href="store.html"><i class="fas fa-cart-shopping"></i> Vaata Poodi</a>
+                <a class="btn btn-secondary" href="join.html"><i class="fas fa-user-plus"></i> Liitu meeskonnaga</a>
+            </div>
+        </div>
+    </section>
 
-                <section class="workspace">
-                    <header class="workspace-header">
-                        <div>
-                            <p>Halda changelogi ja mängijate tagasisidet</p>
-                            <h2 id="formTitle">Uus uuendus</h2>
-                        </div>
-                        <div class="header-actions">
-                            <button id="deleteUpdate" class="danger hidden" type="button">Kustuta</button>
-                            <button id="saveUpdate" type="button">Salvesta</button>
-                        </div>
-                    </header>
+    <section class="stats-section" id="quality">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h2>120+</h2>
+                    <p>Aktiivset kogukonnaliiget</p>
+                </div>
+                <div class="stat-box">
+                    <h2>40+</h2>
+                    <p>Korduvat kampaaniat aastas</p>
+                </div>
+                <div class="stat-box">
+                    <h2>99%</h2>
+                    <p>Positiivset tagasisidet</p>
+                </div>
+                <div class="stat-box">
+                    <h2>24h</h2>
+                    <p>Keskmine vastamisaeg</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                    <section class="editor-layout">
-                        <form id="updateForm" class="editor-form">
-                            <label>
-                                Pealkiri
-                                <input id="title" maxlength="120" required>
-                            </label>
-                            <div class="two-cols">
-                                <label>
-                                    Silt
-                                    <input id="tag" maxlength="40" placeholder="nt. Patch 1.2">
-                                </label>
-                                <label>
-                                    Avaldamise aeg
-                                    <input id="createdAt" type="datetime-local">
-                                </label>
-                            </div>
-                            <label>
-                                Lühikokkuvõte
-                                <input id="summary" maxlength="240">
-                            </label>
-                            <label class="check">
-                                <input id="active" type="checkbox" checked>
-                                Aktiivne ja mängijatele nähtav
-                            </label>
+    <section class="story-section" id="vision">
+        <div class="container">
+            <div class="story-box">
+                <h2><i class="fas fa-flag-checkered"></i> Meie Suund</h2>
+                <p>Axion on ehitatud <strong>community-first</strong> mõttega. Meie long-term vision on luua Eesti parim freeroam server, kus kvaliteet, fair play ja hea kogukonnatunne on alati first priority.</p>
+                <p>Meie fookus on selge: quality over quantity. Iga update peab tooma päris väärtust, hoidma gameplay stabiilsena ja viima kogemuse samm-sammult next level tasemele.</p>
+            </div>
+        </div>
+    </section>
 
-                            <div class="toolbar" aria-label="Teksti tööriistad">
-                                <button type="button" data-command="bold"><strong>B</strong></button>
-                                <button type="button" data-command="italic"><em>I</em></button>
-                                <button type="button" data-command="underline"><u>U</u></button>
-                                <button type="button" data-command="strikeThrough"><s>S</s></button>
-                                <button type="button" data-command="insertUnorderedList">• List</button>
-                                <button type="button" data-command="insertOrderedList">1. List</button>
-                                <button type="button" id="divider">Punktiirjoon</button>
-                            </div>
-                            <div id="bodyEditor" class="rich-editor" contenteditable="true" spellcheck="true"></div>
-                        </form>
+    <div class="page-container">
+        <h1><i class="fas fa-gem"></i> Kvaliteet Esikohal</h1>
+        <p>Axioni veebilehe eesmärk on anda kiire ülevaade, lihtne navigeerimine ja professionaalne välimus. Lehe funktsioonid on suunatud ainult veebikogemusele: visuaalne kvaliteet, kasutusmugavus, ostuteekond ja läbipaistev info.</p>
+        <section>
+            <h2><i class="fas fa-circle-check"></i> Mida Uuendasime</h2>
+            <ul>
+                <li>Puhastatud navigeerimine ja eemaldatud tehnilised ühendusnupud ning liigsed vaated.</li>
+                <li>Parendatud kaardistiilid, värvitasakaal ja loetavus eri ekraanisuurustel.</li>
+                <li>Veebilehe enda sündmuste logimine localStorage kaudu, täielikult brauseripõhine loogika.</li>
+            </ul>
+        </section>
+    </div>
 
-                        <section class="feedback-panel">
-                            <div class="panel-head">
-                                <div>
-                                    <p>Mängijate hinnangud</p>
-                                    <h3 id="feedbackTitle">Viimase uuenduse tagasiside</h3>
-                                </div>
-                                <button id="refreshFeedback" type="button" class="ghost">Värskenda</button>
-                            </div>
-                            <div id="feedbackSummary" class="feedback-summary"></div>
-                            <div id="feedbackList" class="feedback-list"></div>
-                        </section>
-                    </section>
-                </section>
-            </section>
-        </main>
-    </body>
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 Axion Freeroam. Kõik õigused kaitstud.</p>
+            <p>Email: <a href="mailto:support@axionfr.ee">support@axionfr.ee</a></p>
+            <p>Kogukond: <a href="https://discord.gg/axionfr" target="_blank" rel="noopener noreferrer">Liitu Axioni kanaliga</a></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
 </html>
+

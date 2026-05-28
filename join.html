@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liitu Meeskonnaga - Axion Freeroam</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo"><i class="fas fa-compass"></i> Axion Freeroam</div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Kodu</a></li>
+                <li><a href="team.html" class="nav-link">Meeskond</a></li>
+                <li><a href="join.html" class="nav-link active">Liitu meeskonnaga</a></li>
+                <li><a href="rules.html" class="nav-link">Reeglid</a></li>
+                <li><a href="store.html" class="nav-link">Pood</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="join-page">
+        <section class="join-panel">
+            <img class="join-logo" src="logo/axionfreeroam.png" alt="Axion Freeroam logo">
+            <h1>Liitu Axion Freeroam meeskonnaga</h1>
+            <p class="join-intro">Avalduse saatmiseks loo konto või logi sisse. Konto emaili kasutatakse parooli taastamiseks.</p>
+
+            <div id="authPanel" class="auth-panel">
+                <div class="auth-tabs" role="tablist" aria-label="Konto toimingud">
+                    <button class="auth-tab is-active" type="button" data-auth-tab="login">Login</button>
+                    <button class="auth-tab" type="button" data-auth-tab="register">Registreeru</button>
+                    <button class="auth-tab" type="button" data-auth-tab="forgot">Parool ununes</button>
+                    <button class="auth-tab" type="button" data-auth-tab="reset">Taasta parool</button>
+                </div>
+
+                <form id="loginUserForm" class="auth-card auth-view is-active" data-auth-view="login">
+                    <h2><i class="fas fa-right-to-bracket"></i> Sisselogimine</h2>
+                    <div class="form-group">
+                        <label for="loginIdentifier">Kasutajanimi või email</label>
+                        <input id="loginIdentifier" name="identifier" type="text" autocomplete="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Parool</label>
+                        <input id="loginPassword" name="password" type="password" autocomplete="current-password" required>
+                    </div>
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-right-to-bracket"></i> Sisene</button>
+                </form>
+
+                <form id="registerUserForm" class="auth-card auth-view" data-auth-view="register">
+                    <h2><i class="fas fa-user-plus"></i> Loo konto</h2>
+                    <div class="form-group">
+                        <label for="registerUsername">Kasutajanimi</label>
+                        <input id="registerUsername" name="username" type="text" autocomplete="username" minlength="3" maxlength="32" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input id="registerEmail" name="email" type="email" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Parool</label>
+                        <input id="registerPassword" name="password" type="password" autocomplete="new-password" minlength="8" required>
+                    </div>
+                    <button class="btn btn-secondary" type="submit"><i class="fas fa-user-plus"></i> Registreeru</button>
+                </form>
+
+                <form id="forgotPasswordForm" class="auth-card auth-view" data-auth-view="forgot">
+                    <h2><i class="fas fa-envelope"></i> Parooli taastamine</h2>
+                    <p class="auth-help">Sisesta konto email. Kui konto eksisteerib, saadetakse taastamise kood Gmaili kaudu.</p>
+                    <div class="form-group">
+                        <label for="forgotEmail">Email</label>
+                        <input id="forgotEmail" name="email" type="email" autocomplete="email" required>
+                    </div>
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane"></i> Saada taastamise kiri</button>
+                </form>
+
+                <form id="resetPasswordForm" class="auth-card auth-view" data-auth-view="reset">
+                    <h2><i class="fas fa-key"></i> Uus parool</h2>
+                    <div class="form-group">
+                        <label for="resetToken">Taastamise kood</label>
+                        <input id="resetToken" name="token" type="text" autocomplete="one-time-code" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="resetPassword">Uus parool</label>
+                        <input id="resetPassword" name="password" type="password" autocomplete="new-password" minlength="8" required>
+                    </div>
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-check"></i> Muuda parool</button>
+                </form>
+            </div>
+
+            <form id="joinApplicationForm" class="join-form" hidden>
+                <div class="join-userbar">
+                    <span>Sisselogitud: <strong id="joinUsername"></strong> <span id="joinEmail"></span></span>
+                    <button class="btn btn-secondary" type="button" id="logoutUserButton"><i class="fas fa-sign-out-alt"></i> Välja</button>
+                </div>
+                <div class="form-group">
+                    <label for="applicationText">Avaldus</label>
+                    <textarea id="applicationText" name="message" maxlength="1000" required placeholder="Kirjuta avaldus siia..." rows="10"></textarea>
+                    <div class="char-counter"><span id="applicationCounter">0</span>/1000</div>
+                </div>
+                <button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane"></i> Saada avaldus</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 Axion Freeroam. Kõik õigused kaitstud.</p>
+            <p>Email: <a href="mailto:support@axionfr.ee">support@axionfr.ee</a></p>
+            <p>Kogukond: <a href="https://discord.gg/axionfr" target="_blank" rel="noopener noreferrer">Liitu Axioni kanaliga</a></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pood - Axion Freeroam</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo"><i class="fas fa-compass"></i> Axion Freeroam</div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Kodu</a></li>
+                <li><a href="team.html" class="nav-link">Meeskond</a></li>
+                <li><a href="join.html" class="nav-link">Liitu meeskonnaga</a></li>
+                <li><a href="rules.html" class="nav-link">Reeglid</a></li>
+                <li><a href="store.html" class="nav-link active">Pood</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <h1><i class="fas fa-basket-shopping"></i> Axion Pood</h1>
+        <p>Vali paketid, mis lisavad sinu kogukonnakogemusele väärtust. Kõik ostud käsitletakse veebis ning kinnitatakse eraldi maksevoo kaudu.</p>
+
+        <section>
+            <h2><i class="fas fa-star"></i> Liikmepaketid</h2>
+            <div class="store-grid">
+                <div class="store-item">
+                    <h3><i class="fas fa-seedling"></i> Start</h3>
+                    <div class="price">€5</div>
+                    <div class="description">Hea alguspakett aktiivsele liikmele.</div>
+                    <ul>
+                        <li>Eksklusiivne profiilimärgis</li>
+                        <li>Nädalane boonuspakett</li>
+                        <li>Varajane ligipääs kampaaniatele</li>
+                        <li>Eelistatud klienditugi</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="purchaseItem('Start', 5)">Osta</button>
+                </div>
+
+                <div class="store-item">
+                    <h3><i class="fas fa-crown"></i> Plus</h3>
+                    <div class="price">€15</div>
+                    <div class="description">Laiendatud hüved igapäevaseks kasutuseks.</div>
+                    <ul>
+                        <li>Kõik Start paketi eelised</li>
+                        <li>Kohandatav profiiliteema</li>
+                        <li>Kuu jooksul lisaboonused</li>
+                        <li>Prioriteetne piletite käsitlus</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="purchaseItem('Plus', 15)">Osta</button>
+                </div>
+
+                <div class="store-item">
+                    <h3><i class="fas fa-gem"></i> Premium</h3>
+                    <div class="price">€30</div>
+                    <div class="description">Kõrgeim tase kasutajale, kes soovib maksimaalset paindlikkust.</div>
+                    <ul>
+                        <li>Kõik Plus paketi eelised</li>
+                        <li>Eksklusiivsed hooajaeelised</li>
+                        <li>Isikupärastatud profiiliaccent</li>
+                        <li>Kõrgeima prioriteediga tugi</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="purchaseItem('Premium', 30)">Osta</button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-car-side"></i> Sõidukipaketid</h2>
+            <div class="store-grid">
+                <div class="store-item">
+                    <h3><i class="fas fa-bolt"></i> Performance Pack</h3>
+                    <div class="price">€10</div>
+                    <div class="description">Kiiruse ja disaini tasakaaluga valik.</div>
+                    <ul>
+                        <li>5 populaarset mudelit</li>
+                        <li>3 erivärvi profiili</li>
+                        <li>Uuendusboonus järgmise ostuga</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="purchaseItem('Performance Pack', 10)">Osta</button>
+                </div>
+
+                <div class="store-item">
+                    <h3><i class="fas fa-briefcase"></i> Utility Pack</h3>
+                    <div class="price">€8</div>
+                    <div class="description">Praktilised valikud igapäevasteks tegevusteks.</div>
+                    <ul>
+                        <li>5 funktsionaalset sõidukit</li>
+                        <li>Tasakaalustatud hoolduskomplekt</li>
+                        <li>Soodushind kordusostul</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="purchaseItem('Utility Pack', 8)">Osta</button>
+                </div>
+
+                <div class="store-item">
+                    <h3><i class="fas fa-helicopter"></i> Luxury Pack</h3>
+                    <div class="price">€20</div>
+                    <div class="description">Premium valik eksklusiivsete mudelitega.</div>
+                    <ul>
+                        <li>Luksusmudelite komplekt</li>
+                        <li>Kohandatud visuaalstiil</li>
+                        <li>Erikampaania ligipääs</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="purchaseItem('Luxury Pack', 20)">Osta</button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-wand-magic-sparkles"></i> Stiili- ja Lisapaketid</h2>
+            <div class="store-grid">
+                <div class="store-item">
+                    <h3><i class="fas fa-shirt"></i> Style Bundle</h3>
+                    <div class="price">€6</div>
+                    <div class="description">Profiili ja visuaali isikupärastamiseks.</div>
+                    <ul>
+                        <li>Temaatilised stiilikomplektid</li>
+                        <li>Lisamärgid ja ikoonid</li>
+                        <li>Hooajalised kujundused</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="purchaseItem('Style Bundle', 6)">Osta</button>
+                </div>
+
+                <div class="store-item">
+                    <h3><i class="fas fa-house"></i> Home Bundle</h3>
+                    <div class="price">€15</div>
+                    <div class="description">Keskkonna kujundus ja sisuelemendid ühes paketis.</div>
+                    <ul>
+                        <li>Mitmed sisustuskomplektid</li>
+                        <li>Värvipalettide variandid</li>
+                        <li>Ühekordne paigaldusboonus</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="purchaseItem('Home Bundle', 15)">Osta</button>
+                </div>
+
+                <div class="store-item">
+                    <h3><i class="fas fa-fire"></i> Effect Pack</h3>
+                    <div class="price">€8</div>
+                    <div class="description">Lisa dünaamikat animatsioonide ja efektidega.</div>
+                    <ul>
+                        <li>Neoon- ja valgusefektid</li>
+                        <li>Kohandatud tegevusanimatsioonid</li>
+                        <li>Profiili erimärgis</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="purchaseItem('Effect Pack', 8)">Osta</button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-circle-info"></i> Ostuteave</h2>
+            <div class="store-note">
+                <h4><i class="fas fa-credit-card"></i> Maksemeetodid</h4>
+                <ul>
+                    <li>Krediitkaart (Visa, Mastercard)</li>
+                    <li>PayPal</li>
+                    <li>Skrill</li>
+                    <li>Paysafecard</li>
+                </ul>
+            </div>
+            <div class="store-note" style="margin-top: 12px;">
+                <h4><i class="fas fa-lock"></i> Turvalisus ja tingimused</h4>
+                <ul>
+                    <li>Kõik maksed liiguvad turvalise ühenduse kaudu.</li>
+                    <li>Tehingu kinnitus saadetakse e-posti aadressile.</li>
+                    <li>Küsimuste korral vasta kinnituskirjale või kirjuta support@axionfr.ee.</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 Axion Freeroam. Kõik õigused kaitstud.</p>
+            <p>Email: <a href="mailto:support@axionfr.ee">support@axionfr.ee</a></p>
+            <p>Kogukond: <a href="https://discord.gg/axionfr" target="_blank" rel="noopener noreferrer">Liitu Axioni kanaliga</a></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
