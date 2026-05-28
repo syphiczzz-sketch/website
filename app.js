@@ -7,7 +7,6 @@ const formTitle = document.getElementById('formTitle');
 const titleInput = document.getElementById('title');
 const tagInput = document.getElementById('tag');
 const summaryInput = document.getElementById('summary');
-const createdAtInput = document.getElementById('createdAt');
 const activeInput = document.getElementById('active');
 const bodyEditor = document.getElementById('bodyEditor');
 const saveButton = document.getElementById('saveUpdate');
@@ -25,7 +24,13 @@ let updates = [];
 let currentId = null;
 
 function apiPath(path) {
-    return `/api${path}`;
+    const localApi = 'http://localhost:3000';
+
+    if (window.location.hostname === 'localhost' && window.location.port === '3000') {
+        return `/api${path}`;
+    }
+
+    return `${localApi}/api${path}`;
 }
 
 async function request(path, options = {}) {
@@ -40,7 +45,7 @@ async function request(path, options = {}) {
     }
 
     const response = await fetch(url, {
-        credentials: 'same-origin',
+        credentials: url.startsWith('http://localhost:3000') ? 'omit' : 'same-origin',
         ...options,
         headers
     });
@@ -74,17 +79,6 @@ function showLogin() {
 function setSaveStatus(message, type = '') {
     saveStatus.textContent = message;
     saveStatus.className = `save-status${type ? ` ${type}` : ''}`;
-}
-
-function toLocalDateTime(timestamp) {
-    const date = timestamp ? new Date(Number(timestamp) * 1000) : new Date();
-    const offset = date.getTimezoneOffset() * 60000;
-    return new Date(date.getTime() - offset).toISOString().slice(0, 16);
-}
-
-function fromLocalDateTime(value) {
-    if (!value) return Math.floor(Date.now() / 1000);
-    return Math.floor(new Date(value).getTime() / 1000);
 }
 
 function formatDate(timestamp) {
@@ -139,7 +133,6 @@ function selectUpdate(id) {
     titleInput.value = update.title || '';
     tagInput.value = update.tag || '';
     summaryInput.value = update.summary || '';
-    createdAtInput.value = toLocalDateTime(update.createdAt);
     activeInput.checked = update.active !== false;
     bodyEditor.innerHTML = update.bodyHtml || '';
     deleteButton.classList.remove('hidden');
@@ -154,7 +147,6 @@ function newUpdate() {
     titleInput.value = '';
     tagInput.value = '';
     summaryInput.value = '';
-    createdAtInput.value = toLocalDateTime();
     activeInput.checked = true;
     bodyEditor.innerHTML = '';
     deleteButton.classList.add('hidden');
@@ -164,11 +156,13 @@ function newUpdate() {
 }
 
 function formPayload() {
+    const existing = updates.find((item) => item.id === currentId);
+
     return {
         title: titleInput.value.trim(),
         tag: tagInput.value.trim(),
         summary: summaryInput.value.trim(),
-        createdAt: fromLocalDateTime(createdAtInput.value),
+        createdAt: existing?.createdAt || Math.floor(Date.now() / 1000),
         active: activeInput.checked,
         bodyHtml: bodyEditor.innerHTML.trim()
     };
