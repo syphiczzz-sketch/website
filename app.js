@@ -28,11 +28,138 @@ let csrf = '';
 let updates = [];
 let currentId = null;
 
+const USE_MOCK_API = true;
+
 function apiPath(path) {
     return `${basePath}/api${path}`;
 }
 
+// Simple in-memory mock API for local/dev usage (no backend required)
+const MockAPI = (() => {
+    let nextUpdateId = 2;
+    let nextFeedbackId = 2;
+    let updatesMock = [
+        {
+            id: 1,
+            title: 'Esimene uuendus',
+            tag: 'Patch 1.0',
+            summary: 'Algne versioon',
+            createdAt: Math.floor(Date.now() / 1000),
+            active: true,
+            bodyHtml: '<p>Tere tulemast!</p>'
+        }
+    ];
+
+    let feedbackMock = [
+        {
+            id: 1,
+            updateId: 1,
+            playerName: 'Mängija1',
+            rating: 4,
+            comment: 'Hea uuendus',
+            createdAt: Math.floor(Date.now() / 1000),
+            updatedAt: Math.floor(Date.now() / 1000)
+        }
+    ];
+
+    const CSRF_TOKEN = 'dev-csrf-token';
+
+    function parseBody(raw) {
+        if (!raw) return {};
+        try { return JSON.parse(raw); } catch { return {}; }
+    }
+
+    async function handle(path, options = {}) {
+        const method = (options.method || 'GET').toUpperCase();
+        const body = parseBody(options.body || '');
+
+        if (path === '/me' && method === 'GET') {
+            return { status: 200, data: { csrf: CSRF_TOKEN, user: { username: 'admin' } } };
+        }
+
+        if (path === '/login' && method === 'POST') {
+            return { status: 200, data: { csrf: CSRF_TOKEN } };
+        }
+
+        if (path === '/logout' && method === 'POST') {
+            return { status: 200, data: {} };
+        }
+
+        if (path === '/updates' && method === 'GET') {
+            return { status: 200, data: { updates: updatesMock } };
+        }
+
+        if (path === '/updates' && method === 'POST') {
+            const newUpdate = {
+                id: nextUpdateId++,
+                title: body.title || '',
+                tag: body.tag || '',
+                summary: body.summary || '',
+                createdAt: Number(body.createdAt) || Math.floor(Date.now() / 1000),
+                active: body.active === undefined ? true : !!body.active,
+                bodyHtml: body.bodyHtml || ''
+            };
+            updatesMock.unshift(newUpdate);
+            return { status: 200, data: { update: newUpdate } };
+        }
+
+        const updMatch = path.match(/^\/updates\/(\d+)$/);
+        if (updMatch) {
+            const id = Number(updMatch[1]);
+            const idx = updatesMock.findIndex(u => u.id === id);
+
+            if (method === 'GET') {
+                if (idx >= 0) return { status: 200, data: { update: updatesMock[idx] } };
+                return { status: 404, data: { error: 'Not found' } };
+            }
+
+            if (method === 'DELETE') {
+                if (idx >= 0) { updatesMock.splice(idx, 1); return { status: 200, data: {} }; }
+                return { status: 404, data: { error: 'Not found' } };
+            }
+
+            if (method === 'PUT') {
+                if (idx < 0) return { status: 404, data: { error: 'Not found' } };
+                const u = updatesMock[idx];
+                u.title = body.title !== undefined ? body.title : u.title;
+                u.tag = body.tag !== undefined ? body.tag : u.tag;
+                u.summary = body.summary !== undefined ? body.summary : u.summary;
+                u.createdAt = body.createdAt !== undefined ? Number(body.createdAt) : u.createdAt;
+                u.active = body.active !== undefined ? !!body.active : u.active;
+                u.bodyHtml = body.bodyHtml !== undefined ? body.bodyHtml : u.bodyHtml;
+                return { status: 200, data: { update: u } };
+            }
+        }
+
+        const fbMatch = path.match(/^\/feedback\/(\d+)$/);
+        if (fbMatch) {
+            const identifier = Number(fbMatch[1]);
+            if (method === 'GET') {
+                return { status: 200, data: { feedback: feedbackMock.filter(f => f.updateId === identifier) } };
+            }
+            if (method === 'DELETE') {
+                const idx = feedbackMock.findIndex(f => f.id === identifier);
+                if (idx >= 0) { feedbackMock.splice(idx, 1); return { status: 200, data: {} }; }
+                return { status: 404, data: { error: 'Not found' } };
+            }
+        }
+
+        return { status: 404, data: { error: 'NOT_FOUND' } };
+    }
+
+    return { handle, CSRF_TOKEN };
+})();
+
 async function request(path, options = {}) {
+    if (USE_MOCK_API) {
+        const resp = await MockAPI.handle(path, options);
+        if (resp.status >= 400) {
+            const err = resp.data && resp.data.error ? resp.data.error : `HTTP ${resp.status}`;
+            throw new Error(err);
+        }
+        return resp.data;
+    }
+
     const url = apiPath(path);
     const headers = {
         'Content-Type': 'text/plain; charset=UTF-8',
