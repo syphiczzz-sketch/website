@@ -4,100 +4,97 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Axion Updates Admin</title>
-        <link rel="stylesheet" href="admin.css">
-        <script src="admin.js" defer></script>
+        <link rel="stylesheet" href="./styles.css?v=20260528-localonly">
+        <script src="./app.js?v=20260528-localonly" defer></script>
     </head>
     <body>
         <main>
-            <section id="loginView" class="login">
-                <form id="loginForm" class="login-card">
+            <section id="loginView" class="login hidden">
+                <form id="loginForm" class="login-panel">
                     <img src="../img/logo.png" alt="Axion Freeroam">
-                    <h1>Update Admin</h1>
+                    <h1>Admin paneel</h1>
                     <label>
-                        Kasutajanimi
-                        <input id="username" autocomplete="username" required>
+                        Keyword
+                        <input id="keyword" name="keyword" autocomplete="off" required>
                     </label>
-                    <label>
-                        Parool
-                        <input id="password" type="password" autocomplete="current-password" required>
-                    </label>
-                    <p id="loginError" class="message error" aria-live="polite"></p>
+                    <p id="loginError" class="error" aria-live="polite"></p>
                     <button type="submit">Logi sisse</button>
                 </form>
             </section>
 
-            <section id="adminView" class="admin hidden">
+            <section id="adminView" class="admin">
                 <aside class="sidebar">
                     <div class="brand">
                         <img src="../img/logo.png" alt="Axion Freeroam">
                         <div>
-                            <span>Axion Freeroam</span>
-                            <h1>Serveri update'id</h1>
+                            <p>Axion Freeroam</p>
+                            <h1>Uuendused</h1>
                         </div>
                     </div>
-                    <button id="newUpdate" type="button">Uus update</button>
-                    <button id="logout" type="button" class="secondary">Logi välja</button>
+                    <button id="newUpdate" type="button">Uus uuendus</button>
+                    <button id="logout" type="button" class="ghost">Värskenda</button>
                     <div id="updateList" class="update-list"></div>
                 </aside>
 
-                <section class="content">
-                    <header class="topbar">
+                <section class="workspace">
+                    <header class="workspace-header">
                         <div>
-                            <span>Halda update'e, mida mängija näeb serverisse tulles</span>
-                            <h2 id="editorTitle">Uus update</h2>
+                            <p>Halda changelogi ja mängijate tagasisidet</p>
+                            <h2 id="formTitle">Uus uuendus</h2>
                         </div>
-                        <div class="actions">
-                            <button id="deleteUpdate" type="button" class="danger hidden">Kustuta</button>
-                            <button id="saveUpdate" type="button">Salvesta</button>
+                        <div class="header-actions">
+                            <p id="saveStatus" class="save-status" aria-live="polite"></p>
+                            <button id="deleteUpdate" class="danger hidden" type="button">Kustuta</button>
+                            <button id="saveUpdate" type="button">Lae üles</button>
                         </div>
                     </header>
 
-                    <section class="editor-grid">
-                        <form id="updateForm" class="editor">
+                    <section class="editor-layout">
+                        <form id="updateForm" class="editor-form">
                             <label>
                                 Pealkiri
                                 <input id="title" maxlength="120" required>
                             </label>
-                            <div class="row">
+                            <div class="two-cols">
                                 <label>
                                     Silt
-                                    <input id="tag" maxlength="40" placeholder="nt Patch 1.2">
+                                    <input id="tag" maxlength="40" placeholder="nt. Patch 1.2">
                                 </label>
                                 <label>
-                                    Aeg
+                                    Avaldamise aeg
                                     <input id="createdAt" type="datetime-local">
                                 </label>
                             </div>
                             <label>
-                                Lühikirjeldus
+                                Lühikokkuvõte
                                 <input id="summary" maxlength="240">
                             </label>
-                            <label class="checkbox">
+                            <label class="check">
                                 <input id="active" type="checkbox" checked>
-                                Näita mängijatele
+                                Aktiivne ja mängijatele nähtav
                             </label>
 
-                            <div class="toolbar">
+                            <div class="toolbar" aria-label="Teksti tööriistad">
                                 <button type="button" data-command="bold"><strong>B</strong></button>
                                 <button type="button" data-command="italic"><em>I</em></button>
                                 <button type="button" data-command="underline"><u>U</u></button>
+                                <button type="button" data-command="strikeThrough"><s>S</s></button>
                                 <button type="button" data-command="insertUnorderedList">• List</button>
                                 <button type="button" data-command="insertOrderedList">1. List</button>
-                                <button id="divider" type="button">Punktiirjoon</button>
+                                <button type="button" id="divider">Punktiirjoon</button>
                             </div>
                             <div id="bodyEditor" class="rich-editor" contenteditable="true" spellcheck="true"></div>
-                            <p id="status" class="message" aria-live="polite"></p>
                         </form>
 
-                        <section class="feedback">
-                            <div class="feedback-head">
+                        <section class="feedback-panel">
+                            <div class="panel-head">
                                 <div>
-                                    <span>Mängijate tagasiside</span>
-                                    <h3 id="feedbackTitle">Vali update</h3>
+                                    <p>Mängijate hinnangud</p>
+                                    <h3 id="feedbackTitle">Viimase uuenduse tagasiside</h3>
                                 </div>
-                                <button id="refreshFeedback" type="button" class="secondary">Värskenda</button>
+                                <button id="refreshFeedback" type="button" class="ghost">Värskenda</button>
                             </div>
-                            <div id="feedbackStats" class="stats"></div>
+                            <div id="feedbackSummary" class="feedback-summary"></div>
                             <div id="feedbackList" class="feedback-list"></div>
                         </section>
                     </section>

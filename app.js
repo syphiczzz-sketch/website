@@ -3,20 +3,20 @@ const adminView = document.getElementById('adminView');
 const loginForm = document.getElementById('loginForm');
 const loginError = document.getElementById('loginError');
 const updateList = document.getElementById('updateList');
-const editorTitle = document.getElementById('editorTitle');
+const formTitle = document.getElementById('formTitle');
 const titleInput = document.getElementById('title');
 const tagInput = document.getElementById('tag');
 const summaryInput = document.getElementById('summary');
 const createdAtInput = document.getElementById('createdAt');
 const activeInput = document.getElementById('active');
 const bodyEditor = document.getElementById('bodyEditor');
-const statusNode = document.getElementById('status');
 const saveButton = document.getElementById('saveUpdate');
 const deleteButton = document.getElementById('deleteUpdate');
 const newButton = document.getElementById('newUpdate');
 const logoutButton = document.getElementById('logout');
+const saveStatus = document.getElementById('saveStatus');
 const feedbackTitle = document.getElementById('feedbackTitle');
-const feedbackStats = document.getElementById('feedbackStats');
+const feedbackSummary = document.getElementById('feedbackSummary');
 const feedbackList = document.getElementById('feedbackList');
 const refreshFeedbackButton = document.getElementById('refreshFeedback');
 
@@ -25,10 +25,11 @@ let updates = [];
 let currentId = null;
 
 function apiPath(path) {
-    return new URL(`../api${path}`, window.location.href).toString();
+    return `/api${path}`;
 }
 
 async function request(path, options = {}) {
+    const url = apiPath(path);
     const headers = {
         'Content-Type': 'text/plain; charset=UTF-8',
         ...(options.headers || {})
@@ -38,7 +39,7 @@ async function request(path, options = {}) {
         headers['X-CSRF-Token'] = csrf;
     }
 
-    const response = await fetch(apiPath(path), {
+    const response = await fetch(url, {
         credentials: 'same-origin',
         ...options,
         headers
@@ -54,7 +55,7 @@ async function request(path, options = {}) {
     }
 
     if (!response.ok || data.ok === false) {
-        throw new Error(data.error || `Päring ebaõnnestus. HTTP ${response.status}`);
+        throw new Error(data.error || `Päring ebaõnnestus. HTTP ${response.status}. URL: ${url}`);
     }
 
     return data;
@@ -70,9 +71,9 @@ function showLogin() {
     loginView.classList.remove('hidden');
 }
 
-function setStatus(message, isError = false) {
-    statusNode.textContent = message || '';
-    statusNode.classList.toggle('error', isError);
+function setSaveStatus(message, type = '') {
+    saveStatus.textContent = message;
+    saveStatus.className = `save-status${type ? ` ${type}` : ''}`;
 }
 
 function toLocalDateTime(timestamp) {
@@ -82,7 +83,8 @@ function toLocalDateTime(timestamp) {
 }
 
 function fromLocalDateTime(value) {
-    return value ? Math.floor(new Date(value).getTime() / 1000) : Math.floor(Date.now() / 1000);
+    if (!value) return Math.floor(Date.now() / 1000);
+    return Math.floor(new Date(value).getTime() / 1000);
 }
 
 function formatDate(timestamp) {
@@ -96,13 +98,17 @@ function formatDate(timestamp) {
     }).format(new Date(Number(timestamp) * 1000));
 }
 
+function escapeText(value) {
+    return value == null ? '' : String(value);
+}
+
 function renderList() {
     updateList.innerHTML = '';
 
-    if (!updates.length) {
+    if (updates.length === 0) {
         const empty = document.createElement('p');
-        empty.className = 'message';
-        empty.textContent = 'Update pole veel lisatud.';
+        empty.className = 'error';
+        empty.textContent = 'Uuendusi pole veel lisatud.';
         updateList.appendChild(empty);
         return;
     }
@@ -113,7 +119,7 @@ function renderList() {
         button.className = `update-item${update.id === currentId ? ' active' : ''}`;
 
         const title = document.createElement('strong');
-        title.textContent = update.title || 'Pealkirjata';
+        title.textContent = update.title;
 
         const meta = document.createElement('span');
         meta.textContent = `${formatDate(update.createdAt)}${update.active === false ? ' · peidetud' : ''}`;
@@ -129,7 +135,7 @@ function selectUpdate(id) {
     if (!update) return;
 
     currentId = update.id;
-    editorTitle.textContent = 'Muuda update';
+    formTitle.textContent = 'Muuda uuendust';
     titleInput.value = update.title || '';
     tagInput.value = update.tag || '';
     summaryInput.value = update.summary || '';
@@ -137,14 +143,14 @@ function selectUpdate(id) {
     activeInput.checked = update.active !== false;
     bodyEditor.innerHTML = update.bodyHtml || '';
     deleteButton.classList.remove('hidden');
-    setStatus('');
+    setSaveStatus('');
     renderList();
-    loadFeedback(update.id).catch((error) => setStatus(error.message, true));
+    loadFeedback(update.id);
 }
 
 function newUpdate() {
     currentId = null;
-    editorTitle.textContent = 'Uus update';
+    formTitle.textContent = 'Uus uuendus';
     titleInput.value = '';
     tagInput.value = '';
     summaryInput.value = '';
@@ -152,12 +158,12 @@ function newUpdate() {
     activeInput.checked = true;
     bodyEditor.innerHTML = '';
     deleteButton.classList.add('hidden');
-    setStatus('');
+    setSaveStatus('');
     renderList();
-    renderFeedback([]);
+    loadFeedback(updates[0]?.id || '');
 }
 
-function payload() {
+function formPayload() {
     return {
         title: titleInput.value.trim(),
         tag: tagInput.value.trim(),
@@ -168,86 +174,41 @@ function payload() {
     };
 }
 
-async function loadUpdates(selectLatest = true) {
+async function loadUpdates(selectLatest = false) {
     const data = await request('/updates');
     updates = data.updates || [];
     renderList();
 
-    if (currentId && updates.some((item) => item.id === currentId)) {
-        selectUpdate(currentId);
-    } else if (selectLatest && updates[0]) {
+    if (selectLatest && updates[0]) {
         selectUpdate(updates[0].id);
-    } else {
+    } else if (!currentId) {
         newUpdate();
-    }
-}
-
-async function saveUpdate() {
-    const data = payload();
-
-    if (!data.title) {
-        titleInput.focus();
-        setStatus('Pealkiri on kohustuslik.', true);
-        return;
-    }
-
-    saveButton.disabled = true;
-    setStatus('Salvestan...');
-
-    try {
-        if (currentId) {
-            await request(`/updates/${currentId}`, { method: 'PUT', body: JSON.stringify(data) });
-        } else {
-            const created = await request('/updates', { method: 'POST', body: JSON.stringify(data) });
-            currentId = created.update.id;
-        }
-
-        setStatus('Salvestatud.');
-        await loadUpdates(false);
-    } catch (error) {
-        setStatus(error.message, true);
-    } finally {
-        saveButton.disabled = false;
-    }
-}
-
-async function deleteUpdate() {
-    if (!currentId) return;
-
-    const selected = updates.find((item) => item.id === currentId);
-    if (!window.confirm(`Kustutada "${selected?.title || 'see update'}"?`)) return;
-
-    deleteButton.disabled = true;
-
-    try {
-        await request(`/updates/${currentId}`, { method: 'DELETE' });
-        currentId = null;
-        setStatus('Kustutatud.');
-        await loadUpdates(true);
-    } catch (error) {
-        setStatus(error.message, true);
-    } finally {
-        deleteButton.disabled = false;
+    } else {
+        selectUpdate(currentId);
     }
 }
 
 function renderFeedback(items) {
     feedbackList.innerHTML = '';
-    feedbackStats.innerHTML = '';
 
     const count = items.length;
     const total = items.reduce((sum, item) => sum + Number(item.rating || 0), 0);
     const average = count > 0 ? Math.round((total / count) * 10) / 10 : 0;
 
-    feedbackStats.innerHTML = `
-        <div class="metric"><strong>${average}/5</strong><span>Keskmine</span></div>
-        <div class="metric"><strong>${count}</strong><span>Hinnangut</span></div>
-    `;
+    feedbackSummary.innerHTML = '';
+    const averageMetric = document.createElement('div');
+    averageMetric.className = 'metric';
+    averageMetric.innerHTML = `<strong>${average}/5</strong><span>Keskmine hinnang</span>`;
 
-    if (!items.length) {
+    const countMetric = document.createElement('div');
+    countMetric.className = 'metric';
+    countMetric.innerHTML = `<strong>${count}</strong><span>Hinnanguid kokku</span>`;
+    feedbackSummary.append(averageMetric, countMetric);
+
+    if (items.length === 0) {
         const empty = document.createElement('p');
-        empty.className = 'message';
-        empty.textContent = 'Sellel update-il pole veel hinnanguid.';
+        empty.className = 'error';
+        empty.textContent = 'Sellele uuendusele pole veel hinnanguid.';
         feedbackList.appendChild(empty);
         return;
     }
@@ -270,14 +231,23 @@ function renderFeedback(items) {
         const footer = document.createElement('footer');
         footer.textContent = formatDate(item.updatedAt || item.createdAt);
 
-        card.append(header, comment, footer);
+        const deleteFeedback = document.createElement('button');
+        deleteFeedback.type = 'button';
+        deleteFeedback.className = 'small-danger';
+        deleteFeedback.textContent = 'Kustuta hinnang';
+        deleteFeedback.addEventListener('click', async () => {
+            await request(`/feedback/${item.id}`, { method: 'DELETE' });
+            await loadFeedback(currentId);
+        });
+
+        card.append(header, comment, footer, deleteFeedback);
         feedbackList.appendChild(card);
     }
 }
 
 async function loadFeedback(updateId = currentId) {
-    const update = updates.find((item) => item.id === updateId);
-    feedbackTitle.textContent = update ? update.title : 'Vali update';
+    const selected = updates.find((item) => item.id === updateId);
+    feedbackTitle.textContent = selected ? `Tagasiside: ${selected.title}` : 'Viimase uuenduse tagasiside';
 
     if (!updateId) {
         renderFeedback([]);
@@ -293,15 +263,6 @@ loginForm.addEventListener('submit', async (event) => {
     loginError.textContent = '';
 
     try {
-        const data = await request('/login', {
-            method: 'POST',
-            body: JSON.stringify({
-                username: document.getElementById('username').value.trim(),
-                password: document.getElementById('password').value
-            })
-        });
-
-        csrf = data.csrf || '';
         showAdmin();
         await loadUpdates(true);
     } catch (error) {
@@ -309,16 +270,53 @@ loginForm.addEventListener('submit', async (event) => {
     }
 });
 
-logoutButton.addEventListener('click', async () => {
-    await request('/logout', { method: 'POST', body: '{}' }).catch(() => {});
-    csrf = '';
-    showLogin();
+saveButton.addEventListener('click', async () => {
+    const payload = formPayload();
+
+    if (!payload.title) {
+        setSaveStatus('Pealkiri on kohustuslik.', 'error');
+        titleInput.focus();
+        return;
+    }
+
+    saveButton.disabled = true;
+    setSaveStatus('Laen üles...');
+
+    try {
+        if (currentId) {
+            await request(`/updates/${currentId}`, { method: 'PUT', body: JSON.stringify(payload) });
+        } else {
+            const data = await request('/updates', { method: 'POST', body: JSON.stringify(payload) });
+            currentId = data.update.id;
+        }
+
+        await loadUpdates(false);
+        setSaveStatus('Uuendus on üleval.', 'success');
+    } catch (error) {
+        setSaveStatus(error.message, 'error');
+    } finally {
+        saveButton.disabled = false;
+    }
+});
+
+deleteButton.addEventListener('click', async () => {
+    if (!currentId) return;
+    const title = updates.find((item) => item.id === currentId)?.title || 'see uuendus';
+    if (!window.confirm(`Kustutada "${title}"?`)) return;
+
+    await request(`/updates/${currentId}`, { method: 'DELETE' });
+    currentId = null;
+    await loadUpdates(true);
 });
 
 newButton.addEventListener('click', newUpdate);
-saveButton.addEventListener('click', saveUpdate);
-deleteButton.addEventListener('click', deleteUpdate);
-refreshFeedbackButton.addEventListener('click', () => loadFeedback().catch((error) => setStatus(error.message, true)));
+refreshFeedbackButton.addEventListener('click', () => loadFeedback(currentId));
+
+logoutButton.addEventListener('click', async () => {
+    csrf = '';
+    showAdmin();
+    await loadUpdates(true);
+});
 
 document.querySelectorAll('[data-command]').forEach((button) => {
     button.addEventListener('click', () => {
@@ -334,11 +332,9 @@ document.getElementById('divider').addEventListener('click', () => {
 
 (async function boot() {
     try {
-        const data = await request('/me');
-        csrf = data.csrf || '';
         showAdmin();
         await loadUpdates(true);
-    } catch {
-        showLogin();
+    } catch (error) {
+        loginError.textContent = error.message;
     }
 })();
