@@ -1,188 +1,108 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="et">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Paneel - Axion Freeroam</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <script src="admin-updates.js" defer></script>
-    <script src="script.js" defer></script>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo"><i class="fas fa-compass"></i> Axion Freeroam</div>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Kodu</a></li>
-                <li><a href="team.html" class="nav-link">Meeskond</a></li>
-                <li><a href="join.html" class="nav-link">Liitu meeskonnaga</a></li>
-                <li><a href="rules.html" class="nav-link">Reeglid</a></li>
-                <li><a href="store.html" class="nav-link">Pood</a></li>
-                <li><a href="admin.html" class="nav-link admin-link active">Admin Paneel</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <div id="loginForm" class="admin-login">
-        <h2><i class="fas fa-lock"></i> Admin Login</h2>
-        <form id="adminLoginForm">
-            <div class="form-group">
-                <label for="username"><i class="fas fa-user"></i> Kasutajanimi</label>
-                <input type="text" id="username" autocomplete="username" required placeholder="Sisesta kasutajanimi">
-            </div>
-            <div class="form-group">
-                <label for="password"><i class="fas fa-key"></i> Parool</label>
-                <input type="password" id="password" autocomplete="current-password" required placeholder="Sisesta parool">
-            </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 14px;">
-                <i class="fas fa-sign-in-alt"></i> Sisene
-            </button>
-        </form>
-    </div>
-
-    <div id="adminDashboard" class="admin-container" style="display: none;">
-        <div class="admin-header">
-            <h1><i class="fas fa-crown"></i> Veebilehe Admin Paneel</h1>
-            <div class="admin-userbar">
-                <span>Sisselogitud: <strong id="adminName"></strong></span>
-                <button id="logoutButton" class="btn btn-secondary" type="button"><i class="fas fa-sign-out-alt"></i> Välja</button>
-            </div>
-        </div>
-
-        <div class="admin-tabs">
-            <button class="btn btn-primary" type="button" data-tab="overview"><i class="fas fa-home"></i> Ülevaade</button>
-            <button class="btn btn-primary" type="button" data-tab="updates"><i class="fas fa-list-check"></i> Uuendused</button>
-            <button class="btn btn-primary" type="button" data-tab="content"><i class="fas fa-pen-to-square"></i> Koduleht</button>
-            <button class="btn btn-primary" type="button" data-tab="feedback"><i class="fas fa-star"></i> Hinnangud</button>
-            <button class="btn btn-primary" type="button" data-tab="logs"><i class="fas fa-clock-rotate-left"></i> Veebilogi</button>
-            <button class="btn btn-primary" type="button" data-tab="settings"><i class="fas fa-cogs"></i> Seaded</button>
-        </div>
-
-        <div id="overview" class="admin-section" style="display: block;">
-            <h2><i class="fas fa-chart-pie"></i> Kodulehe Ülevaade</h2>
-            <div class="admin-dashboard">
-                <div class="admin-card">
-                    <h3><i class="fas fa-list-check"></i> Serveri uuendused</h3>
-                    <p class="admin-metric" id="updateCount">0</p>
-                    <p>Need kuvatakse mängijatele karakteri valimise järel.</p>
-                </div>
-                <div class="admin-card">
-                    <h3><i class="fas fa-star"></i> Mängijate hinnangud</h3>
-                    <p class="admin-metric" id="feedbackCount">0</p>
-                    <p>Kommentaarid ja tärnid viimastele uuendustele.</p>
-                </div>
-                <div class="admin-card">
-                    <h3><i class="fas fa-file-lines"></i> Lehed</h3>
-                    <p class="admin-metric">6</p>
-                    <p>Kodu, meeskond, liitumine, reeglid, pood ja admin.</p>
-                </div>
-                <div class="admin-card">
-                    <h3><i class="fas fa-list-check"></i> Veebilogi</h3>
-                    <p class="admin-metric" id="siteLogCount">0</p>
-                    <p>Brauseripõhised lehe sündmused.</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="updates" class="admin-section" style="display: none;">
-            <div class="admin-section-head">
-                <h2><i class="fas fa-list-check"></i> Uuenduste haldus</h2>
-                <div>
-                    <button id="newUpdateButton" class="btn btn-secondary" type="button"><i class="fas fa-plus"></i> Uus</button>
-                    <button id="saveUpdateButton" class="btn btn-primary" type="button"><i class="fas fa-floppy-disk"></i> Salvesta</button>
-                    <button id="deleteUpdateButton" class="btn btn-danger" type="button" hidden><i class="fas fa-trash"></i> Kustuta</button>
-                </div>
-            </div>
-
-            <div class="admin-update-grid">
-                <div>
-                    <div id="updateList" class="admin-update-list"></div>
-                </div>
-                <form id="updateForm" class="admin-card">
-                    <div class="form-group">
-                        <label for="updateTitle">Pealkiri</label>
-                        <input id="updateTitle" maxlength="120" required>
-                    </div>
-                    <div class="admin-form-row">
-                        <div class="form-group">
-                            <label for="updateTag">Silt</label>
-                            <input id="updateTag" maxlength="40" placeholder="nt. Patch 1.2">
-                        </div>
-                        <div class="form-group">
-                            <label for="updateCreatedAt">Avaldamise aeg</label>
-                            <input id="updateCreatedAt" type="datetime-local">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="updateSummary">Lühikokkuvõte</label>
-                        <input id="updateSummary" maxlength="240">
-                    </div>
-                    <label class="admin-check">
-                        <input id="updateActive" type="checkbox" checked>
-                        Aktiivne ja mängijatele nähtav
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Axion Updates Admin</title>
+        <link rel="stylesheet" href="admin.css">
+        <script src="admin.js" defer></script>
+    </head>
+    <body>
+        <main>
+            <section id="loginView" class="login">
+                <form id="loginForm" class="login-card">
+                    <img src="../img/logo.png" alt="Axion Freeroam">
+                    <h1>Update Admin</h1>
+                    <label>
+                        Kasutajanimi
+                        <input id="username" autocomplete="username" required>
                     </label>
-
-                    <div class="admin-editor-toolbar">
-                        <button type="button" data-command="bold"><strong>B</strong></button>
-                        <button type="button" data-command="italic"><em>I</em></button>
-                        <button type="button" data-command="underline"><u>U</u></button>
-                        <button type="button" data-command="strikeThrough"><s>S</s></button>
-                        <button type="button" data-command="insertUnorderedList">• List</button>
-                        <button type="button" data-command="insertOrderedList">1. List</button>
-                        <button id="insertDividerButton" type="button">Punktiirjoon</button>
-                    </div>
-                    <div id="updateBodyEditor" class="admin-rich-editor" contenteditable="true" spellcheck="true"></div>
+                    <label>
+                        Parool
+                        <input id="password" type="password" autocomplete="current-password" required>
+                    </label>
+                    <p id="loginError" class="message error" aria-live="polite"></p>
+                    <button type="submit">Logi sisse</button>
                 </form>
-            </div>
-        </div>
+            </section>
 
-        <div id="content" class="admin-section" style="display: none;">
-            <h2><i class="fas fa-pen-to-square"></i> Kodulehe Sisu</h2>
-            <div class="admin-card">
-                <h3><i class="fas fa-link"></i> Kiirlingid</h3>
-                <p>Need vaated on seotud ainult veebilehe sisuga.</p>
-                <a class="admin-button" href="index.html"><i class="fas fa-house"></i> Ava kodu</a>
-                <a class="admin-button" href="team.html"><i class="fas fa-users"></i> Ava meeskond</a>
-                <a class="admin-button" href="join.html"><i class="fas fa-user-plus"></i> Ava avaldus</a>
-                <a class="admin-button" href="store.html"><i class="fas fa-cart-shopping"></i> Ava pood</a>
-            </div>
-        </div>
+            <section id="adminView" class="admin hidden">
+                <aside class="sidebar">
+                    <div class="brand">
+                        <img src="../img/logo.png" alt="Axion Freeroam">
+                        <div>
+                            <span>Axion Freeroam</span>
+                            <h1>Serveri update'id</h1>
+                        </div>
+                    </div>
+                    <button id="newUpdate" type="button">Uus update</button>
+                    <button id="logout" type="button" class="secondary">Logi välja</button>
+                    <div id="updateList" class="update-list"></div>
+                </aside>
 
-        <div id="feedback" class="admin-section" style="display: none;">
-            <div class="admin-section-head">
-                <h2><i class="fas fa-star"></i> Mängijate hinnangud</h2>
-                <button id="refreshFeedbackButton" class="btn btn-secondary" type="button"><i class="fas fa-rotate"></i> Värskenda</button>
-            </div>
-            <div id="feedbackSummary" class="admin-dashboard"></div>
-            <div id="feedbackList" class="admin-feedback-list"></div>
-        </div>
+                <section class="content">
+                    <header class="topbar">
+                        <div>
+                            <span>Halda update'e, mida mängija näeb serverisse tulles</span>
+                            <h2 id="editorTitle">Uus update</h2>
+                        </div>
+                        <div class="actions">
+                            <button id="deleteUpdate" type="button" class="danger hidden">Kustuta</button>
+                            <button id="saveUpdate" type="button">Salvesta</button>
+                        </div>
+                    </header>
 
-        <div id="logs" class="admin-section" style="display: none;">
-            <h2><i class="fas fa-clock-rotate-left"></i> Veebilehe Logid</h2>
-            <div style="margin-bottom: 16px;">
-                <button id="refreshLogsButton" class="btn btn-secondary" type="button"><i class="fas fa-rotate"></i> Värskenda</button>
-                <button id="clearLogsButton" class="btn btn-danger" type="button"><i class="fas fa-trash"></i> Puhasta</button>
-            </div>
-            <div id="siteLogs" class="site-log-list"></div>
-        </div>
+                    <section class="editor-grid">
+                        <form id="updateForm" class="editor">
+                            <label>
+                                Pealkiri
+                                <input id="title" maxlength="120" required>
+                            </label>
+                            <div class="row">
+                                <label>
+                                    Silt
+                                    <input id="tag" maxlength="40" placeholder="nt Patch 1.2">
+                                </label>
+                                <label>
+                                    Aeg
+                                    <input id="createdAt" type="datetime-local">
+                                </label>
+                            </div>
+                            <label>
+                                Lühikirjeldus
+                                <input id="summary" maxlength="240">
+                            </label>
+                            <label class="checkbox">
+                                <input id="active" type="checkbox" checked>
+                                Näita mängijatele
+                            </label>
 
-        <div id="settings" class="admin-section" style="display: none;">
-            <h2><i class="fas fa-cogs"></i> Veebi Seaded</h2>
-            <div class="admin-card">
-                <h3><i class="fas fa-user"></i> Konto Info</h3>
-                <p><strong>Admin:</strong> <span id="settingsAdminName"></span></p>
-                <p><strong>Õigus:</strong> kodulehe ja uuenduste haldus</p>
-            </div>
-        </div>
-    </div>
+                            <div class="toolbar">
+                                <button type="button" data-command="bold"><strong>B</strong></button>
+                                <button type="button" data-command="italic"><em>I</em></button>
+                                <button type="button" data-command="underline"><u>U</u></button>
+                                <button type="button" data-command="insertUnorderedList">• List</button>
+                                <button type="button" data-command="insertOrderedList">1. List</button>
+                                <button id="divider" type="button">Punktiirjoon</button>
+                            </div>
+                            <div id="bodyEditor" class="rich-editor" contenteditable="true" spellcheck="true"></div>
+                            <p id="status" class="message" aria-live="polite"></p>
+                        </form>
 
-    <footer class="footer">
-        <div class="footer-content">
-            <p>&copy; 2026 Axion Freeroam. Kõik õigused kaitstud.</p>
-            <p>Email: <a href="mailto:support@axionfr.ee">support@axionfr.ee</a></p>
-            <p>Kogukond: <a href="https://discord.gg/axionfr" target="_blank" rel="noopener noreferrer">Liitu Axioni kanaliga</a></p>
-        </div>
-    </footer>
-</body>
+                        <section class="feedback">
+                            <div class="feedback-head">
+                                <div>
+                                    <span>Mängijate tagasiside</span>
+                                    <h3 id="feedbackTitle">Vali update</h3>
+                                </div>
+                                <button id="refreshFeedback" type="button" class="secondary">Värskenda</button>
+                            </div>
+                            <div id="feedbackStats" class="stats"></div>
+                            <div id="feedbackList" class="feedback-list"></div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+        </main>
+    </body>
 </html>
