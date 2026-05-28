@@ -28,168 +28,122 @@ let csrf = '';
 let updates = [];
 let currentId = null;
 
-const USE_MOCK_API = true;
-
 function apiPath(path) {
     return `${basePath}/api${path}`;
 }
 
-// Simple in-memory mock API for local/dev usage (no backend required)
-const MockAPI = (() => {
-    let nextUpdateId = 2;
-    let nextFeedbackId = 2;
-    let updatesMock = [
-        {
-            id: 1,
-            title: 'Esimene uuendus',
-            tag: 'Patch 1.0',
-            summary: 'Algne versioon',
-            createdAt: Math.floor(Date.now() / 1000),
-            active: true,
-            bodyHtml: '<p>Tere tulemast!</p>'
-        }
-    ];
+// LocalStorage-backed API (no external backend, no sample/fake data)
+function readUpdates() {
+    try { return JSON.parse(localStorage.getItem('axion_updates') || '[]'); } catch { return []; }
+}
+function writeUpdates(arr) { localStorage.setItem('axion_updates', JSON.stringify(arr)); }
 
-    let feedbackMock = [
-        {
-            id: 1,
-            updateId: 1,
-            playerName: 'Mängija1',
-            rating: 4,
-            comment: 'Hea uuendus',
-            createdAt: Math.floor(Date.now() / 1000),
-            updatedAt: Math.floor(Date.now() / 1000)
-        }
-    ];
+function readFeedback() {
+    try { return JSON.parse(localStorage.getItem('axion_feedback') || '[]'); } catch { return []; }
+}
+function writeFeedback(arr) { localStorage.setItem('axion_feedback', JSON.stringify(arr)); }
 
-    const CSRF_TOKEN = 'dev-csrf-token';
-
-    function parseBody(raw) {
-        if (!raw) return {};
-        try { return JSON.parse(raw); } catch { return {}; }
-    }
-
-    async function handle(path, options = {}) {
-        const method = (options.method || 'GET').toUpperCase();
-        const body = parseBody(options.body || '');
-
-        if (path === '/me' && method === 'GET') {
-            return { status: 200, data: { csrf: CSRF_TOKEN, user: { username: 'admin' } } };
-        }
-
-        if (path === '/login' && method === 'POST') {
-            return { status: 200, data: { csrf: CSRF_TOKEN } };
-        }
-
-        if (path === '/logout' && method === 'POST') {
-            return { status: 200, data: {} };
-        }
-
-        if (path === '/updates' && method === 'GET') {
-            return { status: 200, data: { updates: updatesMock } };
-        }
-
-        if (path === '/updates' && method === 'POST') {
-            const newUpdate = {
-                id: nextUpdateId++,
-                title: body.title || '',
-                tag: body.tag || '',
-                summary: body.summary || '',
-                createdAt: Number(body.createdAt) || Math.floor(Date.now() / 1000),
-                active: body.active === undefined ? true : !!body.active,
-                bodyHtml: body.bodyHtml || ''
-            };
-            updatesMock.unshift(newUpdate);
-            return { status: 200, data: { update: newUpdate } };
-        }
-
-        const updMatch = path.match(/^\/updates\/(\d+)$/);
-        if (updMatch) {
-            const id = Number(updMatch[1]);
-            const idx = updatesMock.findIndex(u => u.id === id);
-
-            if (method === 'GET') {
-                if (idx >= 0) return { status: 200, data: { update: updatesMock[idx] } };
-                return { status: 404, data: { error: 'Not found' } };
-            }
-
-            if (method === 'DELETE') {
-                if (idx >= 0) { updatesMock.splice(idx, 1); return { status: 200, data: {} }; }
-                return { status: 404, data: { error: 'Not found' } };
-            }
-
-            if (method === 'PUT') {
-                if (idx < 0) return { status: 404, data: { error: 'Not found' } };
-                const u = updatesMock[idx];
-                u.title = body.title !== undefined ? body.title : u.title;
-                u.tag = body.tag !== undefined ? body.tag : u.tag;
-                u.summary = body.summary !== undefined ? body.summary : u.summary;
-                u.createdAt = body.createdAt !== undefined ? Number(body.createdAt) : u.createdAt;
-                u.active = body.active !== undefined ? !!body.active : u.active;
-                u.bodyHtml = body.bodyHtml !== undefined ? body.bodyHtml : u.bodyHtml;
-                return { status: 200, data: { update: u } };
-            }
-        }
-
-        const fbMatch = path.match(/^\/feedback\/(\d+)$/);
-        if (fbMatch) {
-            const identifier = Number(fbMatch[1]);
-            if (method === 'GET') {
-                return { status: 200, data: { feedback: feedbackMock.filter(f => f.updateId === identifier) } };
-            }
-            if (method === 'DELETE') {
-                const idx = feedbackMock.findIndex(f => f.id === identifier);
-                if (idx >= 0) { feedbackMock.splice(idx, 1); return { status: 200, data: {} }; }
-                return { status: 404, data: { error: 'Not found' } };
-            }
-        }
-
-        return { status: 404, data: { error: 'NOT_FOUND' } };
-    }
-
-    return { handle, CSRF_TOKEN };
-})();
+function generateId(items) {
+    return items.reduce((m, it) => Math.max(m, it.id || 0), 0) + 1;
+}
 
 async function request(path, options = {}) {
-    if (USE_MOCK_API) {
-        const resp = await MockAPI.handle(path, options);
-        if (resp.status >= 400) {
-            const err = resp.data && resp.data.error ? resp.data.error : `HTTP ${resp.status}`;
-            throw new Error(err);
+    const method = (options.method || 'GET').toUpperCase();
+    const body = options.body ? JSON.parse(options.body) : {};
+
+    // Auth check: if not logged in, `/me` will fail so boot shows login view
+    if (path === '/me' && method === 'GET') {
+        const loggedIn = localStorage.getItem('axion_logged_in') === 'true';
+        if (!loggedIn) {
+            const err = new Error('Not authenticated');
+            err.status = 401;
+            throw err;
         }
-        return resp.data;
+        const token = localStorage.getItem('axion_csrf') || '';
+        return { csrf: token };
     }
 
-    const url = apiPath(path);
-    const headers = {
-        'Content-Type': 'text/plain; charset=UTF-8',
-        ...(options.headers || {})
-    };
-
-    if (csrf && options.method && options.method !== 'GET') {
-        headers['X-CSRF-Token'] = csrf;
+    if (path === '/login' && method === 'POST') {
+        // Persist a simple logged-in flag and CSRF token locally
+        localStorage.setItem('axion_logged_in', 'true');
+        const token = localStorage.getItem('axion_csrf') || `local-${Date.now()}`;
+        localStorage.setItem('axion_csrf', token);
+        return { csrf: token };
     }
 
-    const response = await fetch(url, {
-        credentials: 'same-origin',
-        ...options,
-        headers
-    });
-
-    const raw = await response.text();
-    let data = {};
-
-    try {
-        data = raw ? JSON.parse(raw) : {};
-    } catch {
-        data = { error: raw || `HTTP ${response.status}` };
+    if (path === '/logout' && method === 'POST') {
+        localStorage.removeItem('axion_logged_in');
+        localStorage.removeItem('axion_csrf');
+        return {};
     }
 
-    if (!response.ok || data.ok === false) {
-        throw new Error(data.error || `Päring ebaõnnestus. HTTP ${response.status}. URL: ${url}`);
+    if (path === '/updates' && method === 'GET') {
+        return { updates: readUpdates() };
     }
 
-    return data;
+    if (path === '/updates' && method === 'POST') {
+        const list = readUpdates();
+        const newId = generateId(list);
+        const newUpdate = {
+            id: newId,
+            title: body.title || '',
+            tag: body.tag || '',
+            summary: body.summary || '',
+            createdAt: Number(body.createdAt) || Math.floor(Date.now() / 1000),
+            active: body.active === undefined ? true : !!body.active,
+            bodyHtml: body.bodyHtml || ''
+        };
+        list.unshift(newUpdate);
+        writeUpdates(list);
+        return { update: newUpdate };
+    }
+
+    const updMatch = path.match(/^\/updates\/(\d+)$/);
+    if (updMatch) {
+        const id = Number(updMatch[1]);
+        const list = readUpdates();
+        const idx = list.findIndex(u => u.id === id);
+
+        if (method === 'GET') {
+            if (idx >= 0) return { update: list[idx] };
+            const err = new Error('Not found'); err.status = 404; throw err;
+        }
+
+        if (method === 'DELETE') {
+            if (idx >= 0) { list.splice(idx, 1); writeUpdates(list); return {}; }
+            const err = new Error('Not found'); err.status = 404; throw err;
+        }
+
+        if (method === 'PUT') {
+            if (idx < 0) { const err = new Error('Not found'); err.status = 404; throw err; }
+            const u = list[idx];
+            u.title = body.title !== undefined ? body.title : u.title;
+            u.tag = body.tag !== undefined ? body.tag : u.tag;
+            u.summary = body.summary !== undefined ? body.summary : u.summary;
+            u.createdAt = body.createdAt !== undefined ? Number(body.createdAt) : u.createdAt;
+            u.active = body.active !== undefined ? !!body.active : u.active;
+            u.bodyHtml = body.bodyHtml !== undefined ? body.bodyHtml : u.bodyHtml;
+            list[idx] = u;
+            writeUpdates(list);
+            return { update: u };
+        }
+    }
+
+    const fbMatch = path.match(/^\/feedback\/(\d+)$/);
+    if (fbMatch) {
+        const identifier = Number(fbMatch[1]);
+        const fb = readFeedback();
+        if (method === 'GET') {
+            return { feedback: fb.filter(f => f.updateId === identifier) };
+        }
+        if (method === 'DELETE') {
+            const idx = fb.findIndex(f => f.id === identifier);
+            if (idx >= 0) { fb.splice(idx, 1); writeFeedback(fb); return {}; }
+            const err = new Error('Not found'); err.status = 404; throw err;
+        }
+    }
+
+    const err = new Error('NOT_FOUND'); err.status = 404; throw err;
 }
 
 function showAdmin() {
