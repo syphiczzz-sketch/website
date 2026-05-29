@@ -14,6 +14,7 @@ const deleteButton = document.getElementById('deleteUpdate');
 const newButton = document.getElementById('newUpdate');
 const logoutButton = document.getElementById('logout');
 const saveStatus = document.getElementById('saveStatus');
+const searchInput = document.getElementById('searchUpdates');
 const feedbackTitle = document.getElementById('feedbackTitle');
 const feedbackSummary = document.getElementById('feedbackSummary');
 const feedbackList = document.getElementById('feedbackList');
@@ -22,6 +23,7 @@ const refreshFeedbackButton = document.getElementById('refreshFeedback');
 let csrf = '';
 let updates = [];
 let currentId = null;
+let searchTerm = '';
 
 function apiPath(path) {
     const localApi = 'http://localhost:3000';
@@ -98,16 +100,23 @@ function escapeText(value) {
 
 function renderList() {
     updateList.innerHTML = '';
+    const filteredUpdates = updates.filter((update) => {
+        if (!searchTerm) return true;
 
-    if (updates.length === 0) {
+        return [update.title, update.tag, update.summary, update.bodyHtml]
+            .map((value) => String(value || '').toLowerCase())
+            .some((value) => value.includes(searchTerm));
+    });
+
+    if (filteredUpdates.length === 0) {
         const empty = document.createElement('p');
         empty.className = 'error';
-        empty.textContent = 'Uuendusi pole veel lisatud.';
+        empty.textContent = updates.length === 0 ? 'Uuendusi pole veel lisatud.' : 'Otsingule vastavaid uuendusi pole.';
         updateList.appendChild(empty);
         return;
     }
 
-    for (const update of updates) {
+    for (const update of filteredUpdates) {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = `update-item${update.id === currentId ? ' active' : ''}`;
@@ -305,6 +314,17 @@ deleteButton.addEventListener('click', async () => {
 
 newButton.addEventListener('click', newUpdate);
 refreshFeedbackButton.addEventListener('click', () => loadFeedback(currentId));
+
+searchInput.addEventListener('input', () => {
+    searchTerm = searchInput.value.trim().toLowerCase();
+    renderList();
+});
+
+window.setInterval(() => {
+    if (!adminView.classList.contains('hidden') && currentId) {
+        loadFeedback(currentId).catch(() => {});
+    }
+}, 5000);
 
 logoutButton.addEventListener('click', async () => {
     csrf = '';
