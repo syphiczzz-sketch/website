@@ -99,9 +99,13 @@ button.danger {
 }
 
 .login-panel img {
-    width: 74px;
-    height: 74px;
+    width: 82px;
+    height: 82px;
     object-fit: contain;
+    padding: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background: #090b0e;
 }
 
 h1,
@@ -173,9 +177,11 @@ input:focus,
 }
 
 .brand img {
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
     object-fit: contain;
+    padding: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     background: #090b0e;
 }
