@@ -24,6 +24,7 @@ let csrf = '';
 let updates = [];
 let currentId = null;
 let searchTerm = '';
+const ADMIN_KEYWORD = '140311';
 
 function apiPath(path) {
     const localApi = 'http://localhost:3000';
@@ -42,15 +43,17 @@ async function request(path, options = {}) {
         ...(options.headers || {})
     };
 
-    if (csrf) {
-        headers['X-CSRF-Token'] = csrf;
-    }
+    let response;
 
-    const response = await fetch(url, {
-        credentials: url.startsWith('http://localhost:3000') ? 'omit' : 'same-origin',
-        ...options,
-        headers
-    });
+    try {
+        response = await fetch(url, {
+            credentials: url.startsWith('http://localhost:3000') ? 'omit' : 'same-origin',
+            ...options,
+            headers
+        });
+    } catch {
+        throw new Error('Localhost API ei vasta. Paneel on avatud, aga uuenduste laadimiseks peab node server.js jooksma.');
+    }
 
     const raw = await response.text();
     let data = {};
@@ -66,6 +69,16 @@ async function request(path, options = {}) {
     }
 
     return data;
+}
+
+function loadUpdatesIntoPanel(selectLatest = false) {
+    return loadUpdates(selectLatest).catch((error) => {
+        setSaveStatus(error.message, 'error');
+
+        if (updates.length === 0) {
+            newUpdate();
+        }
+    });
 }
 
 function showAdmin() {
@@ -265,20 +278,15 @@ loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     loginError.textContent = '';
 
-    try {
-        const data = await request('/login', {
-            method: 'POST',
-            body: JSON.stringify({
-                keyword: document.getElementById('keyword').value.trim()
-            })
-        });
-
-        csrf = data.csrf || '';
-        showAdmin();
-        await loadUpdates(true);
-    } catch (error) {
-        loginError.textContent = error.message;
+    if (document.getElementById('keyword').value.trim() !== ADMIN_KEYWORD) {
+        loginError.textContent = 'Vale keyword.';
+        return;
     }
+
+    sessionStorage.setItem('axion_updates_admin', '1');
+    showAdmin();
+    newUpdate();
+    await loadUpdatesIntoPanel(true);
 });
 
 saveButton.addEventListener('click', async () => {
@@ -335,8 +343,8 @@ window.setInterval(() => {
 }, 5000);
 
 logoutButton.addEventListener('click', async () => {
-    await request('/logout', { method: 'POST', body: '{}' }).catch(() => {});
     csrf = '';
+    sessionStorage.removeItem('axion_updates_admin');
     showLogin();
 });
 
@@ -353,13 +361,12 @@ document.getElementById('divider').addEventListener('click', () => {
 });
 
 (async function boot() {
-    try {
-        const data = await request('/me');
-        csrf = data.csrf || '';
-        showAdmin();
-        await loadUpdates(true);
-    } catch (error) {
-        csrf = '';
+    if (sessionStorage.getItem('axion_updates_admin') !== '1') {
         showLogin();
+        return;
     }
+
+    showAdmin();
+    newUpdate();
+    await loadUpdatesIntoPanel(true);
 })();
