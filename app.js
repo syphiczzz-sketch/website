@@ -26,26 +26,39 @@ let currentId = null;
 let searchTerm = '';
 const ADMIN_KEYWORD = '140311';
 
-function apiPath(path) {
-    const localApi = 'http://127.0.0.1:3000';
+function apiCandidates(path) {
+    const candidates = [];
     const resourceMatch = window.location.pathname.match(/^\/([^/]+)\/website\//);
 
+    const add = (url) => {
+        if (url && !candidates.includes(url)) {
+            candidates.push(url);
+        }
+    };
+
     if (resourceMatch) {
-        return `/${resourceMatch[1]}/api${path}`;
+        add(`/${resourceMatch[1]}/api${path}`);
+        add(`http://${window.location.hostname}:30120/${resourceMatch[1]}/api${path}`);
     }
 
     if (window.location.port === '30120') {
-        return `/axion_updates/api${path}`;
+        add(`/axion_updates/api${path}`);
     }
 
     if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000') {
-        return `/api${path}`;
+        add(`/api${path}`);
     }
 
-    return `${localApi}/api${path}`;
+    add(`http://127.0.0.1:30120/axion_updates/api${path}`);
+    add(`http://localhost:30120/axion_updates/api${path}`);
+    add(`http://127.0.0.1:3000/api${path}`);
+    add(`http://localhost:3000/api${path}`);
+    add(`/api${path}`);
+
+    return candidates;
 }
 
-async function request(path, options = {}) {
+async function requestSingleEndpointDisabled(path, options = {}) {
     const url = apiPath(path);
     const headers = {
         'Content-Type': 'text/plain; charset=UTF-8',
@@ -78,6 +91,46 @@ async function request(path, options = {}) {
     }
 
     return data;
+}
+
+async function request(path, options = {}) {
+    const headers = {
+        'Content-Type': 'text/plain; charset=UTF-8',
+        ...(options.headers || {})
+    };
+    const failures = [];
+
+    for (const url of apiCandidates(path)) {
+        let response;
+
+        try {
+            response = await fetch(url, {
+                credentials: url.startsWith('http') ? 'omit' : 'same-origin',
+                ...options,
+                headers
+            });
+        } catch {
+            failures.push(url);
+            continue;
+        }
+
+        const raw = await response.text();
+        let data = {};
+
+        try {
+            data = raw ? JSON.parse(raw) : {};
+        } catch {
+            data = { error: raw || `HTTP ${response.status}` };
+        }
+
+        if (!response.ok || data.ok === false) {
+            throw new Error(data.error || `Päring ebaõnnestus. HTTP ${response.status}. URL: ${url}`);
+        }
+
+        return data;
+    }
+
+    throw new Error(`API ei vasta. Proovitud URL-id: ${failures.join(', ')}`);
 }
 
 function loadUpdatesIntoPanel(selectLatest = false) {
