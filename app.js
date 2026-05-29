@@ -42,7 +42,7 @@ async function request(path, options = {}) {
         ...(options.headers || {})
     };
 
-    if (csrf && options.method && options.method !== 'GET') {
+    if (csrf) {
         headers['X-CSRF-Token'] = csrf;
     }
 
@@ -266,6 +266,14 @@ loginForm.addEventListener('submit', async (event) => {
     loginError.textContent = '';
 
     try {
+        const data = await request('/login', {
+            method: 'POST',
+            body: JSON.stringify({
+                keyword: document.getElementById('keyword').value.trim()
+            })
+        });
+
+        csrf = data.csrf || '';
         showAdmin();
         await loadUpdates(true);
     } catch (error) {
@@ -327,9 +335,9 @@ window.setInterval(() => {
 }, 5000);
 
 logoutButton.addEventListener('click', async () => {
+    await request('/logout', { method: 'POST', body: '{}' }).catch(() => {});
     csrf = '';
-    showAdmin();
-    await loadUpdates(true);
+    showLogin();
 });
 
 document.querySelectorAll('[data-command]').forEach((button) => {
@@ -346,9 +354,12 @@ document.getElementById('divider').addEventListener('click', () => {
 
 (async function boot() {
     try {
+        const data = await request('/me');
+        csrf = data.csrf || '';
         showAdmin();
         await loadUpdates(true);
     } catch (error) {
-        loginError.textContent = error.message;
+        csrf = '';
+        showLogin();
     }
 })();

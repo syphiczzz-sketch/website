@@ -4,25 +4,25 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Axion Updates Admin</title>
-        <link rel="stylesheet" href="./styles.css?v=20260529-polish">
-        <script src="./app.js?v=20260529-polish" defer></script>
+        <link rel="stylesheet" href="./styles.css?v=20260529-keyword">
+        <script src="./app.js?v=20260529-keyword" defer></script>
     </head>
     <body>
         <main>
-            <section id="loginView" class="login hidden">
+            <section id="loginView" class="login">
                 <form id="loginForm" class="login-panel">
                     <img src="../img/logo.png" alt="Axion Freeroam">
                     <h1>Admin paneel</h1>
                     <label>
                         Keyword
-                        <input id="keyword" name="keyword" autocomplete="off" required>
+                        <input id="keyword" name="keyword" type="password" autocomplete="off" required>
                     </label>
                     <p id="loginError" class="error" aria-live="polite"></p>
                     <button type="submit">Logi sisse</button>
                 </form>
             </section>
 
-            <section id="adminView" class="admin">
+            <section id="adminView" class="admin hidden">
                 <aside class="sidebar">
                     <div class="brand">
                         <img src="../img/logo.png" alt="Axion Freeroam">
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <button id="newUpdate" type="button">Uus uuendus</button>
-                    <button id="logout" type="button" class="ghost">Värskenda</button>
+                    <button id="logout" type="button" class="ghost">Logi välja</button>
                     <label class="search-label">
                         Otsi
                         <input id="searchUpdates" placeholder="Pealkiri, silt või tekst...">
