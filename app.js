@@ -28,6 +28,15 @@ const ADMIN_KEYWORD = '140311';
 
 function apiPath(path) {
     const localApi = 'http://127.0.0.1:3000';
+    const resourceMatch = window.location.pathname.match(/^\/([^/]+)\/website\//);
+
+    if (resourceMatch) {
+        return `/${resourceMatch[1]}/api${path}`;
+    }
+
+    if (window.location.port === '30120') {
+        return `/axion_updates/api${path}`;
+    }
 
     if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000') {
         return `/api${path}`;
@@ -52,7 +61,7 @@ async function request(path, options = {}) {
             headers
         });
     } catch {
-        throw new Error('Localhost API ei vasta. Ava paneel aadressilt http://127.0.0.1:3000/admin/ ja kontrolli, et node server.js jookseb.');
+        throw new Error(`API ei vasta. Proovitud URL: ${url}`);
     }
 
     const raw = await response.text();
