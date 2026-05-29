@@ -27,9 +27,9 @@ let searchTerm = '';
 const ADMIN_KEYWORD = '140311';
 
 function apiPath(path) {
-    const localApi = 'http://localhost:3000';
+    const localApi = 'http://127.0.0.1:3000';
 
-    if (window.location.hostname === 'localhost' && window.location.port === '3000') {
+    if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000') {
         return `/api${path}`;
     }
 
@@ -47,12 +47,12 @@ async function request(path, options = {}) {
 
     try {
         response = await fetch(url, {
-            credentials: url.startsWith('http://localhost:3000') ? 'omit' : 'same-origin',
+            credentials: url.startsWith('http://127.0.0.1:3000') ? 'omit' : 'same-origin',
             ...options,
             headers
         });
     } catch {
-        throw new Error('Localhost API ei vasta. Paneel on avatud, aga uuenduste laadimiseks peab node server.js jooksma.');
+        throw new Error('Localhost API ei vasta. Ava paneel aadressilt http://127.0.0.1:3000/admin/ ja kontrolli, et node server.js jookseb.');
     }
 
     const raw = await response.text();
