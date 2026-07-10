@@ -35,41 +35,39 @@ function json(data, status = 200) {
   });
 }
 
-export default {
-  async fetch(request) {
-    if (request.method !== "POST") {
-      return json({ ok: false, error: "Method not allowed." }, 405);
-    }
+export async function POST(request) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ ok: false, error: "Invalid application data." }, 400);
+  }
 
-    let body;
-    try {
-      body = await request.json();
-    } catch {
-      return json({ ok: false, error: "Invalid application data." }, 400);
-    }
+  const result = validateApplication(body);
+  if (result.honeypot) return json({ ok: true });
+  if (result.error) return json({ ok: false, error: result.error }, 400);
 
-    const result = validateApplication(body);
-    if (result.honeypot) return json({ ok: true });
-    if (result.error) return json({ ok: false, error: result.error }, 400);
-
-    if (isRateLimited(getClientIp(request))) {
-      return json(
-        {
-          ok: false,
-          error: "Too many applications were submitted. Please try again later."
-        },
-        429
-      );
-    }
-
-    const delivery = await deliverApplication(result.application);
-    if (!delivery.ok) {
-      return json({ ok: false, error: delivery.error }, delivery.status);
-    }
-
+  if (isRateLimited(getClientIp(request))) {
     return json(
-      { ok: true, applicationId: delivery.applicationId },
-      delivery.status
+      {
+        ok: false,
+        error: "Too many applications were submitted. Please try again later."
+      },
+      429
     );
   }
-};
+
+  const delivery = await deliverApplication(result.application);
+  if (!delivery.ok) {
+    return json({ ok: false, error: delivery.error }, delivery.status);
+  }
+
+  return json(
+    { ok: true, applicationId: delivery.applicationId },
+    delivery.status
+  );
+}
+
+export function GET() {
+  return json({ ok: false, error: "Use POST to submit an application." }, 405);
+}

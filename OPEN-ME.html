@@ -2286,8 +2286,17 @@ applicationForm?.addEventListener("submit", async (event) => {
       body: JSON.stringify(serializeApplication(applicationForm))
     });
 
-    const result = await response.json().catch(() => ({}));
+    const contentType = response.headers.get("content-type") || "";
+    const result = contentType.includes("application/json")
+      ? await response.json().catch(() => ({}))
+      : {};
+
     if (!response.ok || !result.ok) {
+      if (response.status === 404 || !contentType.includes("application/json")) {
+        throw new Error(
+          "The application service is missing from this deployment. Upload the complete website project, including the api folder."
+        );
+      }
       throw new Error(result.error || "The application could not be submitted.");
     }
 

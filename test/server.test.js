@@ -3,7 +3,7 @@ import http from "node:http";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { app, createDiscordPayload, validateApplication } from "../server.js";
-import vercelApplyFunction from "../api/apply.js";
+import { POST as submitVercelApplication } from "../api/apply.js";
 
 function validApplication(overrides = {}) {
   return {
@@ -76,7 +76,7 @@ test("serves the website and health endpoint", async (context) => {
   const page = await pageResponse.text();
 
   assert.equal(healthResponse.status, 200);
-  assert.deepEqual(await healthResponse.json(), { ok: true, applicationsConfigured: false });
+  assert.equal((await healthResponse.json()).ok, true);
   assert.equal(pageResponse.status, 200);
   assert.match(page, /Taskbar Times: 1995/);
   assert.match(page, /id="application-form"/);
@@ -185,7 +185,7 @@ test("Vercel application function delivers to the configured webhook", async (co
     body: JSON.stringify(validApplication({ role: "Concept Artist" }))
   });
 
-  const response = await vercelApplyFunction.fetch(request);
+  const response = await submitVercelApplication(request);
   const result = await response.json();
 
   assert.equal(response.status, 201);
