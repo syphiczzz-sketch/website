@@ -11,8 +11,8 @@ if "%WEBHOOK%"=="" (
 )
 > .env echo DISCORD_WEBHOOK_URL=%WEBHOOK%
 >> .env echo PORT=3000
->> .env echo TRUST_PROXY=true
 echo.
 echo Private .env configuration created successfully.
-echo Run npm install, then npm start.
+echo No npm packages need to be installed.
+echo Run npm start.
 pause

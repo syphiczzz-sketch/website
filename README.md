@@ -4,65 +4,69 @@ Official Northweld Games studio website with a secure Discord application form.
 
 ## Quick preview
 
-Open `OPEN-ME.html` to preview the complete design without installing anything. Its CSS, JavaScript and images are embedded directly in the HTML file.
+Open `OPEN-ME.html` to preview the complete design. Its CSS, JavaScript and images are embedded directly in the HTML file.
 
-The preview cannot send applications. Follow the local setup steps below to run the secure Discord application form.
+The standalone preview cannot submit applications. Run the local server or deploy the complete project to test the application form.
 
 ## Requirements
 
-- Node.js 20 or newer
-- A private Discord webhook for the recruitment channel
-- Vercel, Railway, Render, or another Node.js host for live submissions
+- Node.js 20
+- A Discord webhook for the recruitment channel
+- Vercel or another Node.js host for live submissions
+
+The project has no external npm dependencies. It does not download Express, dotenv, or any other package during deployment.
 
 ## Local setup
 
-1. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-2. On Windows, run `SET-WEBHOOK-WINDOWS.bat` and paste the private recruitment webhook. You can also create a private `.env` file manually:
+1. On Windows, run `SET-WEBHOOK-WINDOWS.bat` and paste the recruitment webhook. You can also create a `.env` file manually:
 
    ```env
    DISCORD_WEBHOOK_URL=your-private-discord-webhook
    PORT=3000
-   TRUST_PROXY=true
    ```
 
-3. Start the website:
+2. Start the website:
 
    ```bash
    npm start
    ```
 
-4. Open `http://localhost:3000`.
+3. Open `http://localhost:3000`.
 
-## Deployment
+Running `npm install` is not required because the project has no dependencies.
 
-### Vercel
+## Vercel deployment
 
-1. Deploy the complete project folder, not only the `public` folder.
-2. In the Vercel project, open **Settings → Environment Variables**.
-3. Add `DISCORD_WEBHOOK_URL` and paste the private recruitment webhook as its value.
-4. Enable the variable for Production, Preview and Development.
-5. Redeploy the project after saving the variable.
+1. Deploy the complete project folder, not only `public`, `index.html`, or `OPEN-ME.html`.
+2. In Vercel, open **Settings → Environment Variables**.
+3. Add `DISCORD_WEBHOOK_URL` and paste the recruitment webhook.
+4. Enable it for Production, Preview and Development.
+5. Redeploy without the old build cache if the previous deployment failed during dependency installation.
+6. Open `https://YOUR-DOMAIN/api/health`.
 
-The root `server.js` file is exported as the Express application for Vercel. Static files remain inside `public/`, while `/api/apply` securely sends applications to Discord.
+The response should contain:
 
-### Other Node.js hosts
+```json
+{
+  "ok": true,
+  "applicationsConfigured": true,
+  "endpoint": "/api/apply"
+}
+```
 
-Deploy the complete folder to a Node.js host such as Railway, Render or a VPS. Set `DISCORD_WEBHOOK_URL` as a private environment variable and use `npm start` as the start command.
+Vercel deploys `api/apply.js` and `api/health.js` as Node.js functions. These functions use only built-in Node.js and Web APIs.
 
-Do not deploy only the `public` folder because the application endpoint requires `server.js`.
+## Other Node.js hosts
+
+Deploy the complete folder. Set `DISCORD_WEBHOOK_URL` as a private environment variable and use `npm start` as the start command.
 
 ## Security
 
-- The Discord webhook is never sent to the browser.
+- The Discord webhook is not included in browser files.
 - Application fields are validated on the server.
-- Discord mentions are disabled in application messages.
-- A honeypot and per-IP submission limit reduce automated spam.
-- Security and content policy headers are included.
+- Discord mentions are disabled.
+- A honeypot and submission limit reduce spam.
+- Security headers are included.
 - `.env` files are excluded from Git.
 
 ## Editing the site
@@ -70,5 +74,7 @@ Do not deploy only the `public` folder because the application endpoint requires
 - Main content: `public/index.html`
 - Visual design: `public/styles.css`
 - Browser behaviour: `public/app.js`
-- Application delivery: `server.js`
+- Vercel application endpoint: `api/apply.js`
+- Shared application logic: `lib/application.js`
+- Local Node.js server: `server.js`
 - Logo files: `public/assets/`

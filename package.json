@@ -1,9 +1,9 @@
 {
   "name": "northweld-games-website",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
-  "description": "Official Northweld Games website and secure Discord application form.",
+  "description": "Official Northweld Games website and Discord application form.",
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
@@ -11,10 +11,6 @@
     "test": "node --test"
   },
   "engines": {
-    "node": ">=20"
-  },
-  "dependencies": {
-    "express": "^5.1.0",
-    "dotenv": "^16.6.1"
+    "node": "20.x"
   }
 }

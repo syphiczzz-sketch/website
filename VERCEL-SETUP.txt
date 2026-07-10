@@ -1,7 +1,7 @@
 NORTHWELD GAMES, VERCEL WEBHOOK SETUP
 
 1. Upload or redeploy this COMPLETE project folder in Vercel.
-2. Do not upload only OPEN-ME.html or only the public folder.
+2. Do not upload only OPEN-ME.html, index.html, or the public folder.
 3. Open the Vercel project.
 4. Go to Settings > Environment Variables.
 5. Create an environment variable named DISCORD_WEBHOOK_URL.
@@ -9,18 +9,19 @@ NORTHWELD GAMES, VERCEL WEBHOOK SETUP
 7. Select Production, Preview and Development.
 8. Save the variable.
 9. Open Deployments and redeploy the latest deployment.
-10. Open https://YOUR-DOMAIN/api/health.
+10. Disable Use existing Build Cache when redeploying after the ETIMEDOUT error.
+11. Open https://YOUR-DOMAIN/api/health.
 
 The result must contain:
 "applicationsConfigured": true
 
-If it says false, the webhook variable is missing, invalid, or the project was not redeployed.
+The project has no external npm dependencies. Vercel does not need to download dotenv, Express, or other packages.
 
-The website now includes a dedicated Vercel function at:
+The application endpoint is:
 /api/apply
 
 The floating Join Discord button uses:
 https://discord.gg/yhYAxtRsvk
 
-The application form now includes:
+The application form includes:
 Concept Artist
