@@ -47,8 +47,9 @@ The preview cannot send applications. Follow the local setup steps below to run 
 3. Add `DISCORD_WEBHOOK_URL` and paste the private recruitment webhook as its value.
 4. Enable the variable for Production, Preview and Development.
 5. Redeploy the project after saving the variable.
+6. Open `/api/health` on the deployed domain and confirm that `applicationsConfigured` is `true`.
 
-The root `server.js` file is exported as the Express application for Vercel. Static files remain inside `public/`, while `/api/apply` securely sends applications to Discord.
+Vercel uses the dedicated `api/apply.js` function for application delivery. Static files remain inside `public/`. The local Express server remains available through `npm start`.
 
 ### Other Node.js hosts
 
@@ -70,5 +71,12 @@ Do not deploy only the `public` folder because the application endpoint requires
 - Main content: `public/index.html`
 - Visual design: `public/styles.css`
 - Browser behaviour: `public/app.js`
-- Application delivery: `server.js`
+- Local application delivery: `server.js`
+- Vercel application delivery: `api/apply.js`
+- Shared validation and Discord payload: `lib/application.js`
 - Logo files: `public/assets/`
+
+
+## Recruitment categories
+
+The application form includes a dedicated **Concept Artist** category for character, environment, prop and mood-development work.

@@ -1920,16 +1920,21 @@ a {
           </article>
           <article class="role-row reveal">
             <span class="role-index">03</span>
+            <div><h3>Concept art</h3><p>Characters, environments, props, mood studies and visual direction for the world of DEADLINE ’95.</p></div>
+            <span class="role-tag">Characters · Environments · Props</span>
+          </article>
+          <article class="role-row reveal">
+            <span class="role-index">04</span>
             <div><h3>2D art and UI</h3><p>Pixel environments, characters, interface assets, animation and brand-consistent presentation.</p></div>
             <span class="role-tag">Pixel art · UI · Animation</span>
           </article>
           <article class="role-row reveal">
-            <span class="role-index">04</span>
+            <span class="role-index">05</span>
             <div><h3>Audio</h3><p>Original music, interface feedback and compact sound design for a desktop experience.</p></div>
             <span class="role-tag">Music · SFX · Mix</span>
           </article>
           <article class="role-row reveal">
-            <span class="role-index">05</span>
+            <span class="role-index">06</span>
             <div><h3>Production and QA</h3><p>Milestone tracking, documentation, structured testing and clear release reporting.</p></div>
             <span class="role-tag">Planning · Testing · Delivery</span>
           </article>
@@ -2008,6 +2013,7 @@ a {
                   <option>Systems and AI Programmer</option>
                   <option>Game and Level Designer</option>
                   <option>Narrative Designer / Writer</option>
+                  <option>Concept Artist</option>
                   <option>2D Pixel Artist</option>
                   <option>UI / UX Designer</option>
                   <option>Technical Artist / VFX Artist</option>
@@ -2160,6 +2166,27 @@ const submitButton = document.querySelector(".submit-button");
 const year = document.querySelector("#current-year");
 
 if (year) year.textContent = new Date().getFullYear();
+
+async function checkApplicationService() {
+  if (!applicationForm || window.location.protocol === "file:") return;
+
+  try {
+    const response = await fetch("/api/health", { cache: "no-store" });
+    const result = await response.json().catch(() => ({}));
+
+    if (response.ok && result.ok && result.applicationsConfigured === false) {
+      setFormStatus(
+        "Applications are temporarily unavailable because the Discord connection has not been configured.",
+        "error"
+      );
+      submitButton.disabled = true;
+    }
+  } catch {
+    // Submission still performs its own server-side check.
+  }
+}
+
+checkApplicationService();
 
 function updateHeader() {
   header?.classList.toggle("scrolled", window.scrollY > 18);

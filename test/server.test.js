@@ -3,6 +3,7 @@ import http from "node:http";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { app, createDiscordPayload, validateApplication } from "../server.js";
+import vercelApplyFunction from "../api/apply.js";
 
 function validApplication(overrides = {}) {
   return {
@@ -29,6 +30,14 @@ test("accepts a complete application", () => {
   const result = validateApplication(validApplication());
   assert.ok(result.application);
   assert.equal(result.application.role, "Gameplay Programmer");
+});
+
+
+
+test("accepts the Concept Artist application category", () => {
+  const result = validateApplication(validApplication({ role: "Concept Artist" }));
+  assert.ok(result.application);
+  assert.equal(result.application.role, "Concept Artist");
 });
 
 test("rejects invalid weekly availability", () => {
@@ -67,7 +76,7 @@ test("serves the website and health endpoint", async (context) => {
   const page = await pageResponse.text();
 
   assert.equal(healthResponse.status, 200);
-  assert.deepEqual(await healthResponse.json(), { ok: true });
+  assert.deepEqual(await healthResponse.json(), { ok: true, applicationsConfigured: false });
   assert.equal(pageResponse.status, 200);
   assert.match(page, /Taskbar Times: 1995/);
   assert.match(page, /id="application-form"/);
@@ -134,4 +143,52 @@ test("does not expose a Discord webhook in browser files", async () => {
   ]);
 
   assert.equal(files.some((content) => content.includes("/api/webhooks/")), false);
+});
+
+
+test("Vercel application function delivers to the configured webhook", async (context) => {
+  let receivedPayload;
+  const mockWebhook = http.createServer((request, response) => {
+    let body = "";
+    request.setEncoding("utf8");
+    request.on("data", (chunk) => {
+      body += chunk;
+    });
+    request.on("end", () => {
+      receivedPayload = JSON.parse(body);
+      response.writeHead(200, { "Content-Type": "application/json" });
+      response.end("{}");
+    });
+  });
+
+  mockWebhook.listen(0, "127.0.0.1");
+  await new Promise((resolve) => mockWebhook.once("listening", resolve));
+  context.after(() => new Promise((resolve) => mockWebhook.close(resolve)));
+
+  const previousEnvironment = process.env.NODE_ENV;
+  const previousWebhook = process.env.DISCORD_WEBHOOK_URL;
+  process.env.NODE_ENV = "test";
+  process.env.DISCORD_WEBHOOK_URL = `http://127.0.0.1:${mockWebhook.address().port}/webhook`;
+  context.after(() => {
+    if (previousEnvironment === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = previousEnvironment;
+    if (previousWebhook === undefined) delete process.env.DISCORD_WEBHOOK_URL;
+    else process.env.DISCORD_WEBHOOK_URL = previousWebhook;
+  });
+
+  const request = new Request("https://northweld.example/api/apply", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-forwarded-for": "203.0.113.55"
+    },
+    body: JSON.stringify(validApplication({ role: "Concept Artist" }))
+  });
+
+  const response = await vercelApplyFunction.fetch(request);
+  const result = await response.json();
+
+  assert.equal(response.status, 201);
+  assert.equal(result.ok, true);
+  assert.equal(receivedPayload.embeds[0].fields[2].value, "Concept Artist");
 });

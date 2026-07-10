@@ -8,6 +8,27 @@ const year = document.querySelector("#current-year");
 
 if (year) year.textContent = new Date().getFullYear();
 
+async function checkApplicationService() {
+  if (!applicationForm || window.location.protocol === "file:") return;
+
+  try {
+    const response = await fetch("/api/health", { cache: "no-store" });
+    const result = await response.json().catch(() => ({}));
+
+    if (response.ok && result.ok && result.applicationsConfigured === false) {
+      setFormStatus(
+        "Applications are temporarily unavailable because the Discord connection has not been configured.",
+        "error"
+      );
+      submitButton.disabled = true;
+    }
+  } catch {
+    // Submission still performs its own server-side check.
+  }
+}
+
+checkApplicationService();
+
 function updateHeader() {
   header?.classList.toggle("scrolled", window.scrollY > 18);
 }
