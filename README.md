@@ -12,6 +12,7 @@ The preview cannot send applications. Follow the local setup steps below to run 
 
 - Node.js 20 or newer
 - A private Discord webhook for the recruitment channel
+- Vercel, Railway, Render, or another Node.js host for live submissions
 
 ## Local setup
 
@@ -21,7 +22,7 @@ The preview cannot send applications. Follow the local setup steps below to run 
    npm install
    ```
 
-2. Create a private `.env` file or configure environment variables through your hosting provider:
+2. On Windows, run `SET-WEBHOOK-WINDOWS.bat` and paste the private recruitment webhook. You can also create a private `.env` file manually:
 
    ```env
    DISCORD_WEBHOOK_URL=your-private-discord-webhook
@@ -39,11 +40,21 @@ The preview cannot send applications. Follow the local setup steps below to run 
 
 ## Deployment
 
-Deploy the complete folder to a Node.js host such as Railway, Render or a VPS. Set the following private environment variable in the host dashboard:
+### Vercel
 
-- `DISCORD_WEBHOOK_URL`
+1. Deploy the complete project folder, not only the `public` folder.
+2. In the Vercel project, open **Settings → Environment Variables**.
+3. Add `DISCORD_WEBHOOK_URL` and paste the private recruitment webhook as its value.
+4. Enable the variable for Production, Preview and Development.
+5. Redeploy the project after saving the variable.
 
-Use `npm start` as the start command. Do not deploy only the `public` folder because the secure application endpoint requires `server.js`.
+The root `server.js` file is exported as the Express application for Vercel. Static files remain inside `public/`, while `/api/apply` securely sends applications to Discord.
+
+### Other Node.js hosts
+
+Deploy the complete folder to a Node.js host such as Railway, Render or a VPS. Set `DISCORD_WEBHOOK_URL` as a private environment variable and use `npm start` as the start command.
+
+Do not deploy only the `public` folder because the application endpoint requires `server.js`.
 
 ## Security
 

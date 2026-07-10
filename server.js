@@ -1,3 +1,4 @@
+import "dotenv/config";
 import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -346,3 +347,4 @@ if (process.argv[1] && path.resolve(process.argv[1]) === currentFile) {
 }
 
 export { app, createDiscordPayload, validateApplication };
+export default app;

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import http from "node:http";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { app, createDiscordPayload, validateApplication } from "../server.js";
 
@@ -70,6 +71,7 @@ test("serves the website and health endpoint", async (context) => {
   assert.equal(pageResponse.status, 200);
   assert.match(page, /Taskbar Times: 1995/);
   assert.match(page, /id="application-form"/);
+  assert.match(page, /https:\/\/discord\.gg\/yhYAxtRsvk/);
 });
 
 test("delivers a valid application to the configured webhook", async (context) => {
@@ -121,4 +123,15 @@ test("delivers a valid application to the configured webhook", async (context) =
   assert.match(result.applicationId, /^[A-F0-9]{8}$/);
   assert.equal(receivedPayload.embeds[0].title, "New team application");
   assert.deepEqual(receivedPayload.allowed_mentions, { parse: [] });
+});
+
+
+test("does not expose a Discord webhook in browser files", async () => {
+  const files = await Promise.all([
+    readFile(new URL("../public/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../public/app.js", import.meta.url), "utf8"),
+    readFile(new URL("../public/styles.css", import.meta.url), "utf8")
+  ]);
+
+  assert.equal(files.some((content) => content.includes("/api/webhooks/")), false);
 });

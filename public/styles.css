@@ -1119,6 +1119,13 @@ a {
   color: var(--danger);
 }
 
+#form-status a {
+  margin-left: 4px;
+  color: inherit;
+  font-weight: 800;
+  text-underline-offset: 3px;
+}
+
 .submit-button {
   min-width: 230px;
   border: 0;

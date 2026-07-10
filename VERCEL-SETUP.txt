@@ -1,0 +1,15 @@
+NORTHWELD GAMES, VERCEL WEBHOOK SETUP
+
+1. Upload or redeploy this complete project folder in Vercel.
+2. Open your Vercel project.
+3. Go to Settings > Environment Variables.
+4. Create an environment variable named DISCORD_WEBHOOK_URL.
+5. Paste your Discord application webhook as the value.
+6. Select Production, Preview and Development.
+7. Save the variable.
+8. Open Deployments and redeploy the latest deployment.
+
+The application form sends data to /api/apply. The webhook stays on the server and is not visible in public/app.js or the browser.
+
+The floating Join Discord button uses:
+https://discord.gg/yhYAxtRsvk

@@ -40,10 +40,21 @@ const revealObserver = new IntersectionObserver(
 
 document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
 
-function setFormStatus(message, type = "") {
+function setFormStatus(message, type = "", includeDiscordLink = false) {
   if (!formStatus) return;
-  formStatus.textContent = message;
+  formStatus.replaceChildren();
   formStatus.className = type;
+  formStatus.append(document.createTextNode(message));
+
+  if (includeDiscordLink) {
+    const separator = document.createTextNode(" ");
+    const link = document.createElement("a");
+    link.href = "https://discord.gg/yhYAxtRsvk";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer nofollow";
+    link.textContent = "Join our Discord";
+    formStatus.append(separator, link);
+  }
 }
 
 function serializeApplication(form) {
@@ -103,7 +114,8 @@ applicationForm?.addEventListener("submit", async (event) => {
     applicationForm.reset();
     setFormStatus(
       `Application ${result.applicationId || ""} was submitted successfully. We will contact shortlisted applicants on Discord.`,
-      "success"
+      "success",
+      true
     );
   } catch (error) {
     setFormStatus(error.message || "The application could not be submitted.", "error");
